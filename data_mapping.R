@@ -241,30 +241,43 @@ vertnet_long.4 <- melt(fourth.quarter, id.vars = 1:12)
 vertnet_long <- rbind(vertnet_long.1, vertnet_long.2, vertnet.3, vertnet.4)
 ##NEXT: select out specific measurements / change measurement names and map to template
 
-Vpattern <- "?1st"
+Vpattern <- "?1st_"
 Vx <- grep(Vpattern, vertnet_long$variable, value = TRUE)
 vertnet.3 <- vertnet_long[vertnet_long$variable %in% Vx,]
+vertnet.4 <- gsub(Vpattern, "", vertnet.3)
 
-colnames(vertnet.3)[colnames(vertnet.3)=="catalognumber"] <- "catalogNumber"
-colnames(vertnet.3)[colnames(vertnet.3)=="collectioncode"] <- "collectionCode"
-colnames(vertnet.3)[colnames(vertnet.3)=="decimallatitude"] <- "decimalLatitude"
-colnames(vertnet.3)[colnames(vertnet.3)=="decimallongitude"] <- "decimalLongitude"
-colnames(vertnet.3)[colnames(vertnet.3)=="locality"] <- "verbatimLocality"
-colnames(vertnet.3)[colnames(vertnet.3)=="maximumelevationmeters"] <- "maximumElevationInMeters"
-colnames(vertnet.3)[colnames(vertnet.3)=="minimumelevationmeters"] <- "minimumElevationInMeters"
-#colnames(vertnet.3)[colnames(vertnet.3)=="occurenceid"] <- ""
-#colnames(vertnet.3)[colnames(vertnet.3)=="occurenceremarks"] <- ""
-#colnames(vertnet.3)[colnames(vertnet.3)=="recordedby"] <- ""
-colnames(vertnet.3)[colnames(vertnet.3)=="scientificname"] <- "scientificName"
-colnames(vertnet.3)[colnames(vertnet.3)=="variable"] <- "measurementType"
-colnames(vertnet.3)[colnames(vertnet.3)=="value"] <- "measurementValue"
-colnames(vertnet.3)[colnames(vertnet.3)=="references"] <- "measurementValue"
-
+colnames(vertnet.4)[colnames(vertnet.4)=="catalognumber"] <- "catalogNumber"
+colnames(vertnet.4)[colnames(vertnet.4)=="collectioncode"] <- "collectionCode"
+colnames(vertnet.4)[colnames(vertnet.4)=="decimallatitude"] <- "decimalLatitude"
+colnames(vertnet.4)[colnames(vertnet.4)=="decimallongitude"] <- "decimalLongitude"
+colnames(vertnet.4)[colnames(vertnet.4)=="locality"] <- "verbatimLocality"
+colnames(vertnet.4)[colnames(vertnet.4)=="maximumelevationmeters"] <- "maximumElevationInMeters"
+colnames(vertnet.4)[colnames(vertnet.4)=="minimumelevationmeters"] <- "minimumElevationInMeters"
+#colnames(vertnet.4)[colnames(vertnet.4)=="occurenceid"] <- ""
+#colnames(vertnet.4)[colnames(vertnet.4)=="occurenceremarks"] <- ""
+#colnames(vertnet.4)[colnames(vertnet.4)=="recordedby"] <- ""
+colnames(vertnet.4)[colnames(vertnet.4)=="scientificname"] <- "scientificName"
+colnames(vertnet.4)[colnames(vertnet.4)=="variable"] <- "measurementType"
+colnames(vertnet.4)[colnames(vertnet.4)=="value"] <- "measurementValue"
+#colnames(vertnet.4)[colnames(vertnet.4)=="references"] <- "references"
 
 #get rid of NAs
-vertnet.4 <- vernet.3[!is.na(vertnet.3$measurementValue),]
+vertnet.5 <- vernet.4[!is.na(vertnet.4$measurementValue),]
 
+#change names
+for(i in 1:length(vertnet.5$measurementType)){
+  if(isTRUE(vertnet.5$measurementType[i] == "total_length")){
+    vertnet.5$measurementType[i] <- "{full body length}"
+  }
+  else if(isTRUE(vertnet.5$measurementType[i] =="ear_length")){
+    vertnet.5$measurementType[i] <- "ear length"
+  }
+  else if(isTRUE(vertnet.5$measurementType[i] == "body_mass")){
+    vertnet.5$measurementType[i] <- "body mass"
+  }
+}
 
+#write.csv(vertnet.4, "vertnet_data.csv", rownames = FALSE)
 
 #probably want to use the gather() function from tidyverse
 
