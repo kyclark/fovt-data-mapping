@@ -83,7 +83,7 @@ ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 colnames(ray_clean)[colnames(ray_clean)=="SPEC_ID"] <- "specimenID"
 colnames(ray_clean)[colnames(ray_clean)=="COUNTRY"] <- "country"
 colnames(ray_clean)[colnames(ray_clean)=="LOCALITY"] <- "verbatimLocality"
-colnames(ray_clean)[colnames(ray_clean)=="QUARRY"] <- "eventRemarks"
+colnames(ray_clean)[colnames(ray_clean)=="QUARRY"] <- "sitename"
 colnames(ray_clean)[colnames(ray_clean)=="DATE.COLLECTED"] <- "verbatimEventDate"
 colnames(ray_clean)[colnames(ray_clean)=="SEX"] <- "sex"
 colnames(ray_clean)[colnames(ray_clean)=="AGE"] <- "ageValue"
@@ -207,7 +207,7 @@ vertnet <- read.csv("https://de.cyverse.org/dl/d/338C987D-F776-4439-910F-3AD2CD1
 
 #rearrange columns
 #need to put catalognumber [18], lat [20], long[21], collection code [19], institution code [59], scientific name [71], locality [63], occurrence id [65]
-df <- vertnet[,c(18:21,43,59,62:68,71,72,1:17,22:42,44:58,60:61,69:70,73:119)]
+df <- vertnet[,c(18:21,43,59,63:68,71,72,1:17,22:42,44:58,60:62,69:70,73:119)]
 
 #select out "focused traits"
 #https://docs.google.com/spreadsheets/d/1rU15rBo-JpopEqpxBXLWSqaecBXwtYpxBLjRImcCvDQ/edit#gid=0
@@ -215,30 +215,41 @@ df <- vertnet[,c(18:21,43,59,62:68,71,72,1:17,22:42,44:58,60:61,69:70,73:119)]
 
 vertnet.2 <- df[,-(90:105)]
 
-#needs <- vertnet.2[,1:15]
-#cols <- colnames(vertnet.2)
-#Vpattern <- "hind_foot_length|ear_length|body_mass|lifestage|tail_length|total_length"
-#Vx <- grep(Vpattern, cols, value = TRUE)
-
 #vertnet_sub <- vertnet.2[,vertnet.2 %in% Vx] #error: memory exhausted
 #vertnet_sub2 <- cbind(needs, vertnet_sub)
 
 #get rid of empty data
-vertnet.3 <- vertnet.2[!is.na(vertnet.2$X1st_body_mass & vertnet.2$X1st_ear_length & 
-                                vertnet.2$X1st_hind_foot_length),]
-
-x <- length(vertnet.3$catalognumber)
+x <- length(vertnet.2$catalognumber)
 half.x <- .5*x
 half.x.1 <- half.x + 1
-vertnet.half <- vertnet.3[1:half.x,]
-vertnet.other <- vertnet.3[half.x.1:x,]
+vertnet.half <- vertnet.2[1:half.x,]
+vertnet.other <- vertnet.2[half.x.1:x,]
 
 #create long version
-vertnet_long.1 <- melt(vertnet.half, id.vars = 1:15) #memory exhausted
-vertnet_long.2 <- melt(vertnet.other, id.vars = 1:15) #memory exhausted
+vertnet_long.1 <- melt(vertnet.half, id.vars = 1:15) 
+vertnet_long.2 <- melt(vertnet.other, id.vars = 1:15) 
 
-rbind(vertnet_long.1, vertnet_long.2)
+vertnet_long <- rbind(vertnet_long.1, vertnet_long.2)
 ##NEXT: select out specific measurements / change measurement names and map to template
+
+Vpattern <- "?1st"
+Vx <- grep(Vpattern, vertnet_long$variable, value = TRUE)
+vertnet.3 <- vertnet_long[vertnet_long$variable %in% Vx,]
+
+colnames(vertnet.3)[colnames(vertnet.3)=="catalognumber"] <- "catalogNumber"
+colnames(vertnet.3)[colnames(vertnet.3)=="collectioncode"] <- "collectionCode"
+colnames(vertnet.3)[colnames(vertnet.3)=="decimallatitude"] <- "decimalLatitude"
+colnames(vertnet.3)[colnames(vertnet.3)=="decimallongitude"] <- "decimalLongitude"
+colnames(vertnet.3)[colnames(vertnet.3)=="locality"] <- "verbatimLocality"
+#colnames(vertnet.3)[colnames(vertnet.3)=="maximumelevationmeters"] <- ""
+#colnames(vertnet.3)[colnames(vertnet.3)=="minimumelevationmeters"] <- ""
+#colnames(vertnet.3)[colnames(vertnet.3)=="occurenceid"] <- ""
+#colnames(vertnet.3)[colnames(vertnet.3)=="occurenceremarks"] <- ""
+#colnames(vertnet.3)[colnames(vertnet.3)=="recordedby"] <- ""
+colnames(vertnet.3)[colnames(vertnet.3)=="scientificname"] <- "scientificName"
+colnames(vertnet.3)[colnames(vertnet.3)=="variable"] <- "measurementType"
+colnames(vertnet.3)[colnames(vertnet.3)=="value"] <- "measurementValue"
+
 
 #probably want to use the gather() function from tidyverse
 
