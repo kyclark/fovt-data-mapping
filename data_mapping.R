@@ -227,10 +227,17 @@ vertnet.2 <- df[,-(90:105)]
 vertnet.3 <- vertnet.2[!is.na(vertnet.2$X1st_body_mass & vertnet.2$X1st_ear_length & 
                                 vertnet.2$X1st_hind_foot_length),]
 
+x <- length(vertnet.3$catalognumber)
+half.x <- .5*x
+half.x.1 <- half.x + 1
+vertnet.half <- vertnet.3[1:half.x,]
+vertnet.other <- vertnet.3[half.x.1:x,]
+
 #create long version
-vertnet_long <- melt(vertnet.2, id.vars = 1:15) #memory exhausted
+vertnet_long.1 <- melt(vertnet.half, id.vars = 1:15) #memory exhausted
+vertnet_long.2 <- melt(vertnet.other, id.vars = 1:15) #memory exhausted
 
-
+rbind(vertnet_long.1, vertnet_long.2)
 ##NEXT: select out specific measurements / change measurement names and map to template
 
 #probably want to use the gather() function from tidyverse
