@@ -3,9 +3,22 @@ require(reshape2)
 ## Ray's Data
 ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
 boneAbbr <- read.csv("https://de.cyverse.org/dl/d/C82D7659-5503-455B-8F7F-883DC3F1BAE0/BoneAbbr.csv", stringsAsFactors = FALSE)
+locality <- read.csv("https://de.cyverse.org/dl/d/736F420E-6474-45F0-82EE-6A43D1703DE2/2.LOCAL_6_24_2019FuTRESPROTECTED.csv", stringsAsFactors = FALSE)
+
+locality.1 <- locality[,c(1:3,5)]
 
 #get rid of protected sites
 ray_safe <- subset(ray, subset = ray$PROTECTED...P != "P")
+
+for(i in 1:length(ray_safe$SPEC_ID)){
+  if(isTRUE(ray_safe$LOCALITY != "NA")){
+    ray_safe$verbatimLocality[i] <- locality.1$LOCALITYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
+    ray_safe$country[i] <- locality.1$COUNTRYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
+  }
+  else{
+    next()
+  }
+}
 
 #cut ray's data to just limb and dental measurements for now from "focused traits"
 #https://docs.google.com/spreadsheets/d/1rU15rBo-JpopEqpxBXLWSqaecBXwtYpxBLjRImcCvDQ/edit#gid=0
@@ -83,8 +96,6 @@ ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 ray_clean$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_clean$SPEC_ID)
 
 colnames(ray_clean)[colnames(ray_clean)=="SPEC_ID"] <- "materialSampleID"
-colnames(ray_clean)[colnames(ray_clean)=="COUNTRY"] <- "country"
-colnames(ray_clean)[colnames(ray_clean)=="LOCALITY"] <- "verbatimLocality"
 colnames(ray_clean)[colnames(ray_clean)=="QUARRY"] <- "sitename"
 colnames(ray_clean)[colnames(ray_clean)=="DATE.COLLECTED"] <- "verbatimEventDate"
 colnames(ray_clean)[colnames(ray_clean)=="SEX"] <- "sex"
@@ -98,13 +109,13 @@ ray_clean$individualID <- ray_clean$materialSampleID
 #create species name
 ray_clean$scientificName <- paste(ray_clean$GENUS, ray_clean$SPECIES, sep = " ")
 
-#get rid of bone, genus, and species
-ray_clean.1 <- ray_clean[,c(-2,-3,-4,-10)]
+#get rid of BONE, COUNTRY, LOCALITY, GENUS, and SPECIES
+ray_clean.1 <- ray_clean[,c(-(2:6),-10)]
 
 #get rid of NAs
 ray_clean.2 <- ray_clean.1[!(is.na(ray_clean.1$measurementValue)),]
 
-#write.csv(ray_clean.2, "ray_data.csv", row.names=FALSE)
+#write.csv(ray_clean.2, "ray_data.csv", row.names=TRUE)
 
 ##Kitty's data
 kitty <- read.csv("https://de.cyverse.org/dl/d/0152B269-3942-4BC4-8FDC-E60B48B17EBD/MayaDeerMetrics_Cantryll_Emeryedits.csv", skip = 2, stringsAsFactors = FALSE)
@@ -221,8 +232,15 @@ df <- vertnet.2[,c(18:21,43,59,63:69,71,72,1:17,22:42,44:58,60:62,70,73:103)]
 #vertnet_sub2 <- cbind(needs, vertnet_sub)
 
 #get rid of empty data
-x <- length(vertnet.2$catalognumber)
-quarter <- .25*x
+x <- length(df$catalognumber)
+index <- seq(1, length(x), 50000)
+steps <- length(index)
+
+for(i in 1:length((index-1))){
+  assign(paste('X',i,sep=''),df) <- df[i:i+1,]
+}
+
+
 index.1 <- quarter+1
 index.2 <- quarter*2
 index.3 <- index.2+1
