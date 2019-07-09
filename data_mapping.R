@@ -16,9 +16,9 @@ boneAbbr_sub <- boneAbbr[boneAbbr$Bone %in% Rx,]
 
 ray_sub1 <- ray_safe[ray_safe$BONE %in% boneAbbr_sub$Abbreviation,]
 ray_sub2 <- subset(ray_safe, subset = c(ray_safe$BONE == "tibia" | 
-                                        ray_safe$BONE == "humerus" | 
-                                        ray_safe$BONE == "femur" | 
-                                        ray_safe$BONE == "radius"))
+                                          ray_safe$BONE == "humerus" | 
+                                          ray_safe$BONE == "femur" | 
+                                          ray_safe$BONE == "radius"))
 ray_sub <- rbind(ray_sub1, ray_sub2)
 
 #measurements are from 13:51
@@ -80,7 +80,9 @@ for(i in 1:length(ray_long_sub$SPEC_ID)) {
 
 ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 
-colnames(ray_clean)[colnames(ray_clean)=="SPEC_ID"] <- "specimenID"
+ray_clean$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_clean$SPEC_ID)
+
+colnames(ray_clean)[colnames(ray_clean)=="SPEC_ID"] <- "materialSampleID"
 colnames(ray_clean)[colnames(ray_clean)=="COUNTRY"] <- "country"
 colnames(ray_clean)[colnames(ray_clean)=="LOCALITY"] <- "verbatimLocality"
 colnames(ray_clean)[colnames(ray_clean)=="QUARRY"] <- "sitename"
@@ -91,6 +93,7 @@ colnames(ray_clean)[colnames(ray_clean)=="template"] <- "measurementType"
 colnames(ray_clean)[colnames(ray_clean)=="value"] <- "measurementValue"
 colnames(ray_clean)[colnames(ray_clean)=="SIDE"] <- "measurementSide"
 ray_clean$measurementUnit <- "mm"
+ray_clean$individualID <- ray_clean$materialSampleID
 
 #create species name
 ray_clean$scientificName <- paste(ray_clean$GENUS, ray_clean$SPECIES, sep = " ")
@@ -100,8 +103,6 @@ ray_clean.1 <- ray_clean[,c(-2,-3,-4,-10)]
 
 #get rid of NAs
 ray_clean.2 <- ray_clean.1[!(is.na(ray_clean.1$measurementValue)),]
-
-ray_clean.2$specimenID <- gsub("^\\s+|\\s+$", "", ray_clean.2$specimenID)
 
 #write.csv(ray_clean.2, "ray_data.csv", row.names=FALSE)
 
@@ -170,6 +171,7 @@ colnames(kitty_clean)[colnames(kitty_clean)=="Side"] <- "measurementSide"
 #colnames(kitty_clean)[colnames(kitty_clean)=="Cantryll.notes"] <- ""
 colnames(kitty_clean)[colnames(kitty_clean)=="variable"] <- "measurementType"
 colnames(kitty_clean)[colnames(kitty_clean)=="value"] <- "measurementValue"
+kitty_clean$materialSampleID <- kitty_clean$individualID
 
 kitty_clean.1 <- kitty_clean[,-10] #get rid of element type because redundant
 
@@ -205,15 +207,15 @@ colnames(kitty_clean.2)[colnames(kitty_clean.2)=="Age..modern.only."] <- "ageVal
 ## VertNet data
 vertnet <- read.csv("https://de.cyverse.org/dl/d/338C987D-F776-4439-910F-3AD2CD1D06E2/mammals_no_bats_2019-03-13.csv", stringsAsFactors = FALSE)
 
-#rearrange columns
-#need to put catalognumber [18], lat [20], long[21], collection code [19], institution code [59], scientific name [71], locality [63], occurrence id [65]
-df <- vertnet[,c(18:21,43,59,63:68,71,72,1:17,22:42,44:58,60:62,69:70,73:119)]
-
 #select out "focused traits"
 #https://docs.google.com/spreadsheets/d/1rU15rBo-JpopEqpxBXLWSqaecBXwtYpxBLjRImcCvDQ/edit#gid=0
-#unneeded traits: testes [90:105]
 
-vertnet.2 <- df[,-(90:105)]
+#unneeded traits: testes [90:105]
+vertnet.2 <- vertnet[,-(90:105)]
+
+#rearrange columns
+#need to put catalognumber [18], lat [20], long[21], collection code [19], institution code [59], scientific name [71], locality [63], occurrence id [65]
+df <- vertnet.2[,c(18:21,43,59,63:69,71,72,1:17,22:42,44:58,60:62,70,73:103)]
 
 #vertnet_sub <- vertnet.2[,vertnet.2 %in% Vx] #error: memory exhausted
 #vertnet_sub2 <- cbind(needs, vertnet_sub)
@@ -253,8 +255,8 @@ colnames(vertnet.4)[colnames(vertnet.4)=="decimallongitude"] <- "decimalLongitud
 colnames(vertnet.4)[colnames(vertnet.4)=="locality"] <- "verbatimLocality"
 colnames(vertnet.4)[colnames(vertnet.4)=="maximumelevationmeters"] <- "maximumElevationInMeters"
 colnames(vertnet.4)[colnames(vertnet.4)=="minimumelevationmeters"] <- "minimumElevationInMeters"
-#colnames(vertnet.4)[colnames(vertnet.4)=="occurenceid"] <- ""
-#colnames(vertnet.4)[colnames(vertnet.4)=="occurenceremarks"] <- ""
+#colnames(vertnet.4)[colnames(vertnet.4)=="occurrenceid"] <- ""
+#colnames(vertnet.4)[colnames(vertnet.4)=="occurrenceremarks"] <- ""
 #colnames(vertnet.4)[colnames(vertnet.4)=="recordedby"] <- ""
 colnames(vertnet.4)[colnames(vertnet.4)=="scientificname"] <- "scientificName"
 colnames(vertnet.4)[colnames(vertnet.4)=="variable"] <- "measurementType"
@@ -264,18 +266,40 @@ colnames(vertnet.4)[colnames(vertnet.4)=="value"] <- "measurementValue"
 #get rid of NAs
 vertnet.5 <- vernet.4[!is.na(vertnet.4$measurementValue),]
 
+#create new column for unit type that matches with id and measurement type
+V2pattern <- "?????????????_units_inferred"
+V2x <- grep(V2pattern, vertnet.5$measurementType, value = TRUE)
+vertnet_sub.1 <- vertnet.5[vertnet.5$measurementType %in% V2x,]
+vertnet_sub.2 <- vertnet.5[!(vertnet.5$measurementType %in% V2x),]
+
+colnames(vertnet_sub.1)[colnames(vertnet_sub.1)=="measurementValue"] <- "measurementUnit"
+#get rid of extra column
+vertnet_sub.3 <- vertnet_sub.1[,-("measurementType")]
+
+#check that sub.1 and sub.2 have the same number of rows
+
+#check that occurenceid is unique 
+U <- length(unique(vertnet.5$occurrenceid))
+O <- length(vertnet.5$occurrenceid)
+U == O
+vertnet.6 <- merge(vertnet_sub.3, vertnet_sub.2, by = "occurrenceid", all.x = TRUE, all.y = TRUE)
+#check that have original length
+M <- length(vertnet.6$occurrenceid)
+M == O
+
 #change names
-for(i in 1:length(vertnet.5$measurementType)){
-  if(isTRUE(vertnet.5$measurementType[i] == "total_length")){
-    vertnet.5$measurementType[i] <- "{full body length}"
+for(i in 1:length(vertnet.6$measurementType)){
+  if(isTRUE(vertnet.6$measurementType[i] == "total_length")){
+    vertnet.6$measurementType[i] <- "{full body length}"
   }
-  else if(isTRUE(vertnet.5$measurementType[i] =="ear_length")){
-    vertnet.5$measurementType[i] <- "ear length"
+  else if(isTRUE(vertnet.6$measurementType[i] =="ear_length")){
+    vertnet.6$measurementType[i] <- "ear length"
   }
-  else if(isTRUE(vertnet.5$measurementType[i] == "body_mass")){
-    vertnet.5$measurementType[i] <- "body mass"
+  else if(isTRUE(vertnet.6$measurementType[i] == "body_mass")){
+    vertnet.6$measurementType[i] <- "body mass"
   }
 }
+
 
 #write.csv(vertnet.4, "vertnet_data.csv", rownames = FALSE)
 
