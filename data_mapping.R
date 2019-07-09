@@ -250,6 +250,10 @@ colnames(vertnet.3)[colnames(vertnet.3)=="scientificname"] <- "scientificName"
 colnames(vertnet.3)[colnames(vertnet.3)=="variable"] <- "measurementType"
 colnames(vertnet.3)[colnames(vertnet.3)=="value"] <- "measurementValue"
 
+#get rid of NAs
+vertnet.4 <- vernet.3[!is.na(vertnet.3$measurementValue),]
+
+
 
 #probably want to use the gather() function from tidyverse
 
