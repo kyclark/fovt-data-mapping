@@ -1,4 +1,4 @@
-"specimenID","country","verbatimLocality","eventRemarks","verbatimEventDate","sex","measurementSide","ageValue","measurementType","measurementValue","template","measurementUnit","scientificName"
+"specimenID","country","verbatimLocality","sitename","verbatimEventDate","sex","measurementSide","ageValue","measurementType","measurementValue","template","measurementUnit","scientificName"
 "OU1144/1","3","1","","","unknown","right","7.0","M2","399.28","femur length from trochanter","mm","Hippotherium giganteum"
 "HLMDSS-2","5","1","","","unknown","no record","8.0","M2","188","humerus length from caput","mm","""Hipparion""  sp."
 "Ho1154","7","1","","","unknown","left","10.3","M2","0","femur length from trochanter","mm","Hippotherium primigeneium"
