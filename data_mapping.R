@@ -2,7 +2,7 @@ require(reshape2)
 
 ## Ray's Data
 ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
-boneAbbr <- read.csv("BoneAbbr.csv", stringsAsFactors = FALSE)
+boneAbbr <- read.csv("https://de.cyverse.org/dl/d/C82D7659-5503-455B-8F7F-883DC3F1BAE0/BoneAbbr.csv", stringsAsFactors = FALSE)
 
 #get rid of protected sites
 ray_safe <- subset(ray, subset = ray$PROTECTED...P != "P")
@@ -41,40 +41,40 @@ ray_long_sub <- subset(ray_long, ray_long$BONE == "humerus" & ray_long$variable 
 #next change names to match template
 for(i in 1:length(ray_long_sub$SPEC_ID)) {
   if(isTRUE(ray_long_sub$BONE[i] == "humerus" & ray_long_sub$variable[i] == "M1")){
-    ray_long_sub$template[i] <- "humerus length"
+    ray_long_sub$template[i] <- "{humerus length}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "humerus" & ray_long_sub$variable[i] == "M2")){
-    ray_long_sub$template[i] <- "humerus length from caput"
+    ray_long_sub$template[i] <- "{length line trochlea of humerus to caput of humerus}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "humerus" & ray_long_sub$variable[i] == "M5")){
-    ray_long_sub$template[i] <- "humerus proximal breadth"
+    ray_long_sub$template[i] <- "{humerus tubercle width}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "tibia" & ray_long_sub$variable[i] == "M5")){
-    ray_long_sub$template[i] <- "tibia distal breadth"
+    ray_long_sub$template[i] <- "{tibia distal depth}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "tibia" & ray_long_sub$variable[i] == "M8")){
-    ray_long_sub$template[i] <-"tibia proximal breadth"
+    ray_long_sub$template[i] <-"{tibia proximal breadth}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "radius" & ray_long_sub$variable[i] == "M10")){
-    ray_long_sub$template[i] <- "radius distal breadth"
+    ray_long_sub$template[i] <- "{distal radius breadth}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "femur" & ray_long_sub$variable[i] == "M1")){
-    ray_long_sub$template[i] <- "femur length"
+    ray_long_sub$template[i] <- "{femur length}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "femur" & ray_long_sub$variable[i] == "M2")){
-    ray_long_sub$template[i] <- "femur length from trochanter"
+    ray_long_sub$template[i] <- "{length line of medial condyle of femur to greater trochanter}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "mc2" & ray_long_sub$variable[i] == "M3")){
-    ray_long_sub$template[i] <- "metacarpal proximal breadth"
+    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "mc3" & ray_long_sub$variable[i] == "M5")){
-    ray_long_sub$template[i] <- "metacarpal proximal breadth"
+    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "mc4" & ray_long_sub$variable[i] == "M3")){
-    ray_long_sub$template[i] <- "metacarpal proximal breadth"
+    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
   }
   else if(isTRUE(ray_long_sub$BONE[i] == "mc2or4" & ray_long_sub$variable[i] == "M3")){
-    ray_long_sub$template[i] <- "metacarpal proximal breadth"
+    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
   }
 }
 
@@ -87,7 +87,7 @@ colnames(ray_clean)[colnames(ray_clean)=="QUARRY"] <- "sitename"
 colnames(ray_clean)[colnames(ray_clean)=="DATE.COLLECTED"] <- "verbatimEventDate"
 colnames(ray_clean)[colnames(ray_clean)=="SEX"] <- "sex"
 colnames(ray_clean)[colnames(ray_clean)=="AGE"] <- "ageValue"
-colnames(ray_clean)[colnames(ray_clean)=="variable"] <- "measurementType"
+colnames(ray_clean)[colnames(ray_clean)=="template"] <- "measurementType"
 colnames(ray_clean)[colnames(ray_clean)=="value"] <- "measurementValue"
 colnames(ray_clean)[colnames(ray_clean)=="SIDE"] <- "measurementSide"
 ray_clean$measurementUnit <- "mm"
@@ -123,10 +123,10 @@ K2x <- grep(K2pattern, kitty_sub$variable, value = TRUE)
 
 kitty_sub2 <- kitty_sub[kitty_sub$variable %in% K2x,]
 
-kitty_sub2$template[kitty_sub2$variable == "Femur.GLC"] <- "Femur length from trochanter"
-kitty_sub2$template[kitty_sub2$variable == "Femur.GL"] <- "Femur length"
-kitty_sub2$template[kitty_sub2$variable == "Humerus.GLC"] <- "Humerus length from caput"
-kitty_sub2$template[kitty_sub2$variable == "Humerus.GL"] <- "Humerus length"
+kitty_sub2$template[kitty_sub2$variable == "Femur.GLC"] <- "{line of medial condyle of femur to greater trochanter}"
+kitty_sub2$template[kitty_sub2$variable == "Femur.GL"] <- "{femur length}"
+kitty_sub2$template[kitty_sub2$variable == "Humerus.GLC"] <- "{line trochlea of humerus to caput of humerus}"
+kitty_sub2$template[kitty_sub2$variable == "Humerus.GL"] <- "{humerus length}"
 
 kitty_clean <- kitty_sub2[!(is.na(kitty_sub2$value)),]
 
@@ -220,16 +220,25 @@ vertnet.2 <- df[,-(90:105)]
 
 #get rid of empty data
 x <- length(vertnet.2$catalognumber)
-half.x <- .5*x
-half.x.1 <- half.x + 1
-vertnet.half <- vertnet.2[1:half.x,]
-vertnet.other <- vertnet.2[half.x.1:x,]
+quarter <- .25*x
+index.1 <- quarter+1
+index.2 <- quarter*2
+index.3 <- index.2+1
+index.4 <- quarter*3
+index.5 <- index.4+1
+
+first.quarter <- vertnet.2[1:quarter,]
+second.quarter <- vertnet.2[index.1:index.2,]
+third.quarter <- vertnet.2[index.3:index.4,]
+fourth.quarter <- vertnet.2[index.5:quarter,]
 
 #create long version
-vertnet_long.1 <- melt(vertnet.half, id.vars = 1:15) 
-vertnet_long.2 <- melt(vertnet.other, id.vars = 1:15) 
+vertnet_long.1 <- melt(first.quarter, id.vars = 1:12) 
+vertnet_long.2 <- melt(second.quarter, id.vars = 1:12) 
+vertnet_long.3 <- melt(third.quarter, id.vars = 1:12)
+vertnet_long.4 <- melt(fourth.quarter, id.vars = 1:12)
 
-vertnet_long <- rbind(vertnet_long.1, vertnet_long.2)
+vertnet_long <- rbind(vertnet_long.1, vertnet_long.2, vertnet.3, vertnet.4)
 ##NEXT: select out specific measurements / change measurement names and map to template
 
 Vpattern <- "?1st"
@@ -241,14 +250,16 @@ colnames(vertnet.3)[colnames(vertnet.3)=="collectioncode"] <- "collectionCode"
 colnames(vertnet.3)[colnames(vertnet.3)=="decimallatitude"] <- "decimalLatitude"
 colnames(vertnet.3)[colnames(vertnet.3)=="decimallongitude"] <- "decimalLongitude"
 colnames(vertnet.3)[colnames(vertnet.3)=="locality"] <- "verbatimLocality"
-#colnames(vertnet.3)[colnames(vertnet.3)=="maximumelevationmeters"] <- ""
-#colnames(vertnet.3)[colnames(vertnet.3)=="minimumelevationmeters"] <- ""
+colnames(vertnet.3)[colnames(vertnet.3)=="maximumelevationmeters"] <- "maximumElevationInMeters"
+colnames(vertnet.3)[colnames(vertnet.3)=="minimumelevationmeters"] <- "minimumElevationInMeters"
 #colnames(vertnet.3)[colnames(vertnet.3)=="occurenceid"] <- ""
 #colnames(vertnet.3)[colnames(vertnet.3)=="occurenceremarks"] <- ""
 #colnames(vertnet.3)[colnames(vertnet.3)=="recordedby"] <- ""
 colnames(vertnet.3)[colnames(vertnet.3)=="scientificname"] <- "scientificName"
 colnames(vertnet.3)[colnames(vertnet.3)=="variable"] <- "measurementType"
 colnames(vertnet.3)[colnames(vertnet.3)=="value"] <- "measurementValue"
+colnames(vertnet.3)[colnames(vertnet.3)=="references"] <- "measurementValue"
+
 
 #get rid of NAs
 vertnet.4 <- vernet.3[!is.na(vertnet.3$measurementValue),]
