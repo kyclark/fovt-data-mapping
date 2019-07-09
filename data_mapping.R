@@ -225,7 +225,7 @@ vertnet.2 <- df[,-(90:105)]
 
 #get rid of empty data
 vertnet.3 <- vertnet.2[!is.na(vertnet.2$X1st_body_mass & vertnet.2$X1st_ear_length & 
-                                vertnet.2$X1st_hind_foot_length)]
+                                vertnet.2$X1st_hind_foot_length),]
 
 #create long version
 vertnet_long <- melt(vertnet.2, id.vars = 1:15) #memory exhausted
