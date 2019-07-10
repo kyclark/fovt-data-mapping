@@ -1,7 +1,9 @@
+#load packages
 require(reshape2)
 
-template <- read.csv("template_mapping.csv", stringsAsFactors = FALSE)
-ontology <- read.csv("ontology_mapping.csv", stringsAsFactors = FALSE)
+template_map <- read.csv("template_mapping.csv", stringsAsFactors = FALSE)
+ontology_map <- read.csv("ontology_mapping.csv", stringsAsFactors = FALSE)
+template <- read.csv("template.csv", stringsAsFactors = FALSE)
 
 ## Ray's Data
 ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
@@ -14,8 +16,8 @@ ray_safe <- subset(ray, subset = ray$PROTECTED...P != "P")
 #replace locality and country #s with actual names
 for(i in 1:length(ray_safe[,1])){
   if(isTRUE(ray_safe$LOCALITY[i] != "NA")){
-    ray_safe$LOCALITYName[i] <- locality$LOCALITYName[locality$LOCALITY.No == ray_safe$LOCALITY[i] & locality$COUNTRY.No == ray_safe$COUNTRY[i]]
-    ray_safe$COUNTRYName[i] <- locality$COUNTRYName[locality$LOCALITY.No == ray_safe$LOCALITY[i] & locality$COUNTRY.No == ray_safe$COUNTRY[i]]
+    ray_safe$verbatimLocality[i] <- locality$LOCALITYName[locality$LOCALITY.No == ray_safe$LOCALITY[i] & locality$COUNTRY.No == ray_safe$COUNTRY[i]]
+    ray_safe$country[i] <- locality$COUNTRYName[locality$LOCALITY.No == ray_safe$LOCALITY[i] & locality$COUNTRY.No == ray_safe$COUNTRY[i]]
   }
   else{
     next()
@@ -37,7 +39,7 @@ ray_sub2 <- subset(ray_safe, subset = c(ray_safe$BONE == "tibia" |
 ray_sub <- rbind(ray_sub1, ray_sub2)
 
 #create species name
-ray_sub$binomial <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
+ray_sub$scientificName <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
 
 ray_sub$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_sub$SPEC_ID)
 
@@ -58,8 +60,8 @@ ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology$measurement[
 ## ALSO: FOR SINGLE AGES - WHERE DOES IT GO?
 ## GET RID OF "?" AND "recent"
 ## WHAT UNITES ARE AGES IN??
-ray_long_sub$ageMIN <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 1)
-ray_long_sub$ageMAX <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 2)
+ray_long_sub$minimumChronometricAge <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 1)
+ray_long_sub$maximumChronometricAge <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 2)
 
 #get rid of NAs
 ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
@@ -70,14 +72,17 @@ ray_clean$value <- as.numeric(ray_clean$value)
 
 #next change names to match template
 for(i in 1:length(ray_clean[,1])){
-  ray_clean$variable[i] <- ontology$ontologyTerm[ontology$measurement == ray_clean$measurement[i]]
+  ray_clean$measurementType[i] <- ontology$ontologyTerm[ontology$measurement == ray_clean$measurement[i]]
 }
 
 cols <- colnames(ray_clean)
 x <- c()
 for(i in 1:length(cols)){
-  if(isTRUE(colnames(ray_clean)[i] %in% template$columnName)){
-  colnames(ray_clean)[i] <- template$templateTerm[template$columnName == cols[i]]
+  if(isTRUE(colnames(ray_clean)[i] %in% template_map$columnName)){
+  colnames(ray_clean)[i] <- template_map$templateTerm[template_map$columnName == cols[i]]
+  }
+  else if(isTRUE(colnames(ray_clean)[i] %in% template$column)){
+    colnames(ray_clean)[i] <- template$column[template$column == cols[i]]
   }
   else{
     x[i] <- colnames(ray_clean)[i]
@@ -106,17 +111,9 @@ Kx <- grep(Kpattern, kitty_long$variable, value = TRUE)
 
 kitty_sub <- kitty_long[kitty_long$variable %in% Kx,]
 
-K2pattern <- "Femur.GLC|Femur.GL|Humerus.GLC|Humerus.GL|Metacarpal.BFp|Humerus.Bp" #check metacarpal BFp
-K2x <- grep(K2pattern, kitty_sub$variable, value = TRUE)
+kitty_long_sub <- subset(kitty_sub, kitty_sub$variable %in% ontology$measurement[ontology$dataset == "kitty"])
 
-kitty_sub2 <- kitty_sub[kitty_sub$variable %in% K2x,]
-
-kitty_sub2$template[kitty_sub2$variable == "Femur.GLC"] <- "{line of medial condyle of femur to greater trochanter}"
-kitty_sub2$template[kitty_sub2$variable == "Femur.GL"] <- "{femur length}"
-kitty_sub2$template[kitty_sub2$variable == "Humerus.GLC"] <- "{line trochlea of humerus to caput of humerus}"
-kitty_sub2$template[kitty_sub2$variable == "Humerus.GL"] <- "{humerus length}"
-
-kitty_clean <- kitty_sub2[!(is.na(kitty_sub2$value)),]
+kitty_clean <- kitty_long_sub[!(is.na(kitty_long_sub$value)),]
 
 #move modern to a different group
 for(i in 1:length(kitty_clean$Period)){
@@ -138,58 +135,53 @@ for(i in 1:length(kitty_clean$Period)){
   }
 }
 
-#add units
-kitty_clean$measurementUnit <- rep("mm", length(kitty_clean$value))
-
-#rename columns
-colnames(kitty_clean)[colnames(kitty_clean)=="Site"] <- "sitename"
-#colnames(kitty_clean)[colnames(kitty_clean)=="EAP.Acc."] <- ""
-colnames(kitty_clean)[colnames(kitty_clean)=="Provenience..field.number."] <- "contextName" #?
-colnames(kitty_clean)[colnames(kitty_clean)=="ID.Catalog...cat..element.or.portion."] <- "individualID"
-colnames(kitty_clean)[colnames(kitty_clean)=="Specimen.Catalog...cat..organism."] <- "catalogNumber"
-#colnames(kitty_clean)[colnames(kitty_clean)=="Cantryll.Test...test..analyst.sample.number."] <- ""
-colnames(kitty_clean)[colnames(kitty_clean)=="Period"] <- "culturalStratigraphyOccupationPeriod"
-#colnames(kitty_clean)[colnames(kitty_clean)=="Date"] <- ""
-colnames(kitty_clean)[colnames(kitty_clean)=="ID"] <- "scientificName"
-colnames(kitty_clean)[colnames(kitty_clean)=="Side"] <- "measurementSide"
-#colnames(kitty_clean)[colnames(kitty_clean)=="Description.completeness"] <- ""
-#colnames(kitty_clean)[colnames(kitty_clean)=="Age..modern.only."] <- ""
-#colnames(kitty_clean)[colnames(kitty_clean)=="Fusion"] <- ""
-#colnames(kitty_clean)[colnames(kitty_clean)=="Cantryll.notes"] <- ""
-colnames(kitty_clean)[colnames(kitty_clean)=="variable"] <- "measurementType"
-colnames(kitty_clean)[colnames(kitty_clean)=="value"] <- "measurementValue"
-kitty_clean$materialSampleID <- kitty_clean$individualID
-
-kitty_clean.1 <- kitty_clean[,-10] #get rid of element type because redundant
-
-
-for(i in 1:length(kitty_clean.1$Date)) {
-  if(isTRUE(grepl("(?i)century", kitty_clean.1$Date[i]))) {
-    kitty_clean.1$referenceSystem[i] <- "century"
+for(i in 1:length(kitty_clean$Date)) {
+  if(isTRUE(grepl("(?i)century", kitty_clean$Date[i]))) {
+    kitty_clean$referenceSystem[i] <- "century"
   }
-  else if(isTRUE(grepl("??????AD?????", kitty_clean.1$Date[i]))) {
-    kitty_clean.1$referenceSystem[i] <- "AD"
+  else if(isTRUE(grepl("??????AD?????", kitty_clean$Date[i]))) {
+    kitty_clean$referenceSystem[i] <- "AD"
   }
   else {
-    kitty_clean.1$referenceSystem[i] <- "NA"
+    kitty_clean$referenceSystem[i] <- "NA"
   }
 }
 
-kitty_clean.1$Date <- gsub("(?i)century|AD|th", "", kitty_clean.1$Date)
-kitty_clean.1$Date <- gsub(" to ", "-", kitty_clean.1$Date)
+kitty_clean$Date <- gsub("(?i)century|AD|th", "", kitty_clean$Date)
+kitty_clean$Date <- gsub(" to ", "-", kitty_clean$Date)
 
 #split dates
-kitty_clean.1$minimumChronometricAge <- sapply(strsplit(as.character(kitty_clean.1$Date),'-'), "[", 1)
-kitty_clean.1$maximumChronometricAge <- sapply(strsplit(as.character(kitty_clean.1$Date),'-'), "[", 2)
+kitty_clean$minimumChronometricAge <- sapply(strsplit(as.character(kitty_clean$Date),'-'), "[", 1)
+kitty_clean$maximumChronometricAge <- sapply(strsplit(as.character(kitty_clean$Date),'-'), "[", 2)
 
-kitty_clean.2 <- kitty_clean.1[,-8] #get rid of date
 
-colnames(kitty_clean.2)[colnames(kitty_clean.2)=="referenceSystem"] <- "minimumChronometricAgeReferenceSystem"
-kitty_clean.2$maximumChronometricAgeReferenceSystem <- kitty_clean.2$minimumChronometricAgeReferenceSystem
+#change variable & value
+kitty_clean$variable <- as.character(kitty_clean$variable)
+kitty_clean$value <- as.numeric(kitty_clean$value)
 
-colnames(kitty_clean.2)[colnames(kitty_clean.2)=="Age..modern.only."] <- "ageValue"
+#next change names to match template
+for(i in 1:length(kitty_clean[,1])){
+  kitty_clean$variable[i] <- ontology$ontologyTerm[ontology$measurement == kitty_clean$variable[i]]
+}
 
-#write.csv(kitty_clean.2, "kitty_data.csv", row.names=FALSE)
+cols <- colnames(kitty_clean)
+x <- c()
+for(i in 1:length(cols)){
+  if(isTRUE(colnames(kitty_clean)[i] %in% template_map$columnName)){
+    colnames(kitty_clean)[i] <- template_map$templateTerm[template_map$columnName == cols[i]]
+  }
+  else if(isTRUE(colnames(kitty_clean)[i] %in% template$column)){
+    colnames(kitty_clean)[i] <- template$column[template$column == cols[i]]
+  }
+  else{
+    x[i] <- colnames(kitty_clean)[i]
+  }
+}
+z <- x[!is.na(x)]
+
+kitty_clean.1 <- kitty_clean[,!(colnames(kitty_clean) %in% z)]
+
+#write.csv(kitty_clean.1, "kitty_data.csv", row.names=FALSE)
 
 ## VertNet data
 vertnet <- read.csv("https://de.cyverse.org/dl/d/338C987D-F776-4439-910F-3AD2CD1D06E2/mammals_no_bats_2019-03-13.csv", stringsAsFactors = FALSE)
