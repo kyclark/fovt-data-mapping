@@ -8,15 +8,14 @@ ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA4
 boneAbbr <- read.csv("https://de.cyverse.org/dl/d/C82D7659-5503-455B-8F7F-883DC3F1BAE0/BoneAbbr.csv", stringsAsFactors = FALSE)
 locality <- read.csv("https://de.cyverse.org/dl/d/736F420E-6474-45F0-82EE-6A43D1703DE2/2.LOCAL_6_24_2019FuTRESPROTECTED.csv", stringsAsFactors = FALSE)
 
-locality.1 <- locality[,c(1:3,5)]
-
 #get rid of protected sites
 ray_safe <- subset(ray, subset = ray$PROTECTED...P != "P")
 
-for(i in 1:length(ray_safe$SPEC_ID)){
-  if(isTRUE(ray_safe$LOCALITY != "NA")){
-    ray_safe$LOCALITYName[i] <- locality.1$LOCALITYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
-    ray_safe$COUNTRYName[i] <- locality.1$COUNTRYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
+#replace locality and country #s with actual names
+for(i in 1:length(ray_safe[,1])){
+  if(isTRUE(ray_safe$LOCALITY[i] != "NA")){
+    ray_safe$LOCALITYName[i] <- locality$LOCALITYName[locality$LOCALITY.No == ray_safe$LOCALITY[i] & locality$COUNTRY.No == ray_safe$COUNTRY[i]]
+    ray_safe$COUNTRYName[i] <- locality$COUNTRYName[locality$LOCALITY.No == ray_safe$LOCALITY[i] & locality$COUNTRY.No == ray_safe$COUNTRY[i]]
   }
   else{
     next()
@@ -43,31 +42,42 @@ ray_sub$binomial <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
 ray_sub$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_sub$SPEC_ID)
 
 #reorder columns
-ray_sub1 <- ray_sub[,c(1:12,53,13:51)]
+ray_sub1 <- ray_sub[,c(1:12,53:55,13:51)]
 
-#measurements are from 13:51
-ray_long <- melt(ray_sub1, id.vars = c(1:13))
+#measurements are from 15:54
+ray_long <- melt(ray_sub1, id.vars = c(1:15), factorsAsStrings = FALSE)
 
 #select out specific measurements / change measurement names and map to template
 ray_long$measurement <- paste(ray_long$BONE, ray_long$variable, sep = " ")
 
 ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology$measurement[ontology$dataset == "ray"])
 
+#clean up AGE
+#split dates
+## NOTE: THESE DATES ARE NOT IN CONSISTENT ORDER - CHECK W RAY
+## ALSO: FOR SINGLE AGES - WHERE DOES IT GO?
+## GET RID OF "?" AND "recent"
+## WHAT UNITES ARE AGES IN??
+ray_long_sub$ageMIN <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 1)
+ray_long_sub$ageMAX <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 2)
+
 #get rid of NAs
 ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 
+#for some reason variables are factors, and values are characters
+ray_clean$variable <- as.character(ray_clean$variable)
+ray_clean$value <- as.numeric(ray_clean$value)
 
 #next change names to match template
-for(i in 1:length(ray_clean$SPEC_ID)){
-  ray_clean$x[i] <- ontology$ontologyTerm[ontology$measurement == ray_clean$measurement[i]]
+for(i in 1:length(ray_clean[,1])){
+  ray_clean$variable[i] <- ontology$ontologyTerm[ontology$measurement == ray_clean$measurement[i]]
 }
-ray_clean$variable <- ray_clean$x
 
 cols <- colnames(ray_clean)
 x <- c()
 for(i in 1:length(cols)){
-  if(isTRUE(colnames(ray_clean)[i] %in% template$columnName[template$dataset == "ray"])){
-  colnames(ray_clean)[i] <- template$templateTerm[template$columnName == cols[i] & template$dataset == "ray"]
+  if(isTRUE(colnames(ray_clean)[i] %in% template$columnName)){
+  colnames(ray_clean)[i] <- template$templateTerm[template$columnName == cols[i]]
   }
   else{
     x[i] <- colnames(ray_clean)[i]
@@ -75,18 +85,13 @@ for(i in 1:length(cols)){
 }
 z <- x[!is.na(x)]
 
+ray_clean.1 <- ray_clean[,!(colnames(ray_clean) %in% z)]
+
 #add missing columns
-ray_clean$individualID <- ray_clean$materialSampleID
-ray_clean$measurementUnit <- rep("mm", length(ray_clean[1]))
+ray_clean.1$individualID <- ray_clean.1$materialSampleID
+ray_clean.1$measurementUnit <- rep("mm", length(ray_clean.1[1]))
 
-#get rid of PROTECTED, BONE, COUNTRY, LOCALITY, GENUS, and SPECIES
-ray_clean.1 <- ray_clean[,c(-(2:6),-10)]
-
-
-#get rid of NAs
-ray_clean.2 <- ray_clean.1[!(is.na(ray_clean.1$measurementValue)),]
-
-#write.csv(ray_clean.2, "ray_data.csv", row.names=TRUE)
+#write.csv(ray_clean.1, "ray_data.csv", row.names=TRUE)
 
 ##Kitty's data
 kitty <- read.csv("https://de.cyverse.org/dl/d/0152B269-3942-4BC4-8FDC-E60B48B17EBD/MayaDeerMetrics_Cantryll_Emeryedits.csv", skip = 2, stringsAsFactors = FALSE)

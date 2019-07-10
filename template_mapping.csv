@@ -2,11 +2,15 @@ dataset,columnName,templateTerm
 all,variable,measurementType
 all,value,measurementValue
 ray,SPEC_ID,materialSampleID
+ray,COUNTRYName,country
+ray,LOCALITYName,verbatimLocality
 ray,QUARRY,sitename
 ray,DATE.COLLECTED,verbatimEventDate
 ray,SEX,sex
-ray,AGE,ageValue
+ray,ageMIN,minimumChronometricAge
+ray,ageMAX,maximumChronometricAge
 ray,SIDE,measurementSide
+ray,binomial,scientificName
 kitty,Site,sitename
 kitty,Provenience..field.number.,contextName
 kitty,ID.Catalog...cat..element.or.portion.,individualID
