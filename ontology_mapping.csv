@@ -1,0 +1,18 @@
+dataset,measurement,ontologyTerm
+ray,tibia M8,{tibia distal depth}
+ray,tibia M5,{tibia proximal breadth}
+ray,radius M10,{distal radius breadth}
+ray,femur M1,{femur length}
+ray,femur M2,{length line of medial condyle of femur to greater trochanter}
+ray,humerus M1,{humerus length}
+ray,humerus M2,{length line trochlea of humerus to caput of humerus}
+ray,humerus M5,{humerus tubercle width}
+ray,mc2 M3,{metacaral proximal breadth}
+ray,mc2or4 M3,{metacaral proximal breadth}
+ray,mc3 M5,{metacaral proximal breadth}
+ray,mc4 M3,{metacaral proximal breadth}
+ray,mc2or4 M3,{metacaral proximal breadth}
+kitty,Femur.GLC,{line of medial condyle of femur to greater trochanter}
+kitty,Femur.GL,{femur length}
+kitty,Humerus.GLC,{line trochlea of humerus to caput of humerus}
+kitty,Humerus.GL,{humerus length}

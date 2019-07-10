@@ -1,0 +1,16 @@
+dataset,columnName,templateTerm
+all,variable,measurementType
+all,value,measurementValue
+ray,SPEC_ID,materialSampleID
+ray,QUARRY,sitename
+ray,DATE.COLLECTED,verbatimEventDate
+ray,SEX,sex
+ray,AGE,ageValue
+ray,SIDE,measurementSide
+kitty,Site,sitename
+kitty,Provenience..field.number.,contextName
+kitty,ID.Catalog...cat..element.or.portion.,individualID
+kitty,Specimen.Catalog...cat..organism.,catalogNumber
+kitty,Period,culturalStratigraphyOccupationPeriod
+kitty,ID,scientificName
+kitty,Side,measurementSide

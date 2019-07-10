@@ -1,5 +1,8 @@
 require(reshape2)
 
+template <- read.csv("template_mapping.csv", stringsAsFactors = FALSE)
+ontology <- read.csv("ontology_mapping.csv", stringsAsFactors = FALSE)
+
 ## Ray's Data
 ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
 boneAbbr <- read.csv("https://de.cyverse.org/dl/d/C82D7659-5503-455B-8F7F-883DC3F1BAE0/BoneAbbr.csv", stringsAsFactors = FALSE)
@@ -12,8 +15,8 @@ ray_safe <- subset(ray, subset = ray$PROTECTED...P != "P")
 
 for(i in 1:length(ray_safe$SPEC_ID)){
   if(isTRUE(ray_safe$LOCALITY != "NA")){
-    ray_safe$verbatimLocality[i] <- locality.1$LOCALITYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
-    ray_safe$country[i] <- locality.1$COUNTRYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
+    ray_safe$LOCALITYName[i] <- locality.1$LOCALITYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
+    ray_safe$COUNTRYName[i] <- locality.1$COUNTRYName[locality.1$LOCALITY.No == ray_safe$LOCALITY[i] & locality.1$COUNTRY.No == ray_safe$COUNTRY[i]]
   }
   else{
     next()
@@ -34,83 +37,51 @@ ray_sub2 <- subset(ray_safe, subset = c(ray_safe$BONE == "tibia" |
                                           ray_safe$BONE == "radius"))
 ray_sub <- rbind(ray_sub1, ray_sub2)
 
+#create species name
+ray_sub$binomial <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
+
+ray_sub$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_sub$SPEC_ID)
+
+#reorder columns
+ray_sub1 <- ray_sub[,c(1:12,53,13:51)]
+
 #measurements are from 13:51
-ray_long <- melt(ray_sub, id.vars = c(1:12))
+ray_long <- melt(ray_sub1, id.vars = c(1:13))
 
 #select out specific measurements / change measurement names and map to template
-ray_long_sub <- subset(ray_long, ray_long$BONE == "humerus" & ray_long$variable == "M1" |
-                         ray_long$BONE == "humerus" & ray_long$variable == "M2" |
-                         ray_long$BONE == "humerus" & ray_long$variable == "M5" |
-                         ray_long$BONE == "femur" & ray_long$variable == "M1" |
-                         ray_long$BONE == "femur" & ray_long$variable == "M2" |
-                         ray_long$BONE == "radius" & ray_long$variable == "M10" |
-                         ray_long$BONE == "tibia" & ray_long$variable == "M5" |
-                         ray_long$BONE == "tibia" & ray_long$variable == "M8" |
-                         ray_long$BONE == "mc2" & ray_long$variable == "M3" |
-                         ray_long$BONE == "mc2or4" & ray_long$variable == "M3" |
-                         ray_long$BONE == "mc3" & ray_long$variable == "M5" |
-                         ray_long$BONE == "mc4" & ray_long$variable == "M3")
+ray_long$measurement <- paste(ray_long$BONE, ray_long$variable, sep = " ")
 
-#next change names to match template
-for(i in 1:length(ray_long_sub$SPEC_ID)) {
-  if(isTRUE(ray_long_sub$BONE[i] == "humerus" & ray_long_sub$variable[i] == "M1")){
-    ray_long_sub$template[i] <- "{humerus length}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "humerus" & ray_long_sub$variable[i] == "M2")){
-    ray_long_sub$template[i] <- "{length line trochlea of humerus to caput of humerus}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "humerus" & ray_long_sub$variable[i] == "M5")){
-    ray_long_sub$template[i] <- "{humerus tubercle width}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "tibia" & ray_long_sub$variable[i] == "M5")){
-    ray_long_sub$template[i] <- "{tibia distal depth}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "tibia" & ray_long_sub$variable[i] == "M8")){
-    ray_long_sub$template[i] <-"{tibia proximal breadth}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "radius" & ray_long_sub$variable[i] == "M10")){
-    ray_long_sub$template[i] <- "{distal radius breadth}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "femur" & ray_long_sub$variable[i] == "M1")){
-    ray_long_sub$template[i] <- "{femur length}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "femur" & ray_long_sub$variable[i] == "M2")){
-    ray_long_sub$template[i] <- "{length line of medial condyle of femur to greater trochanter}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "mc2" & ray_long_sub$variable[i] == "M3")){
-    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "mc3" & ray_long_sub$variable[i] == "M5")){
-    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "mc4" & ray_long_sub$variable[i] == "M3")){
-    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
-  }
-  else if(isTRUE(ray_long_sub$BONE[i] == "mc2or4" & ray_long_sub$variable[i] == "M3")){
-    ray_long_sub$template[i] <- "{metacarpal proximal breadth}"
-  }
-}
+ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology$measurement[ontology$dataset == "ray"])
 
+#get rid of NAs
 ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 
-ray_clean$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_clean$SPEC_ID)
 
-colnames(ray_clean)[colnames(ray_clean)=="SPEC_ID"] <- "materialSampleID"
-colnames(ray_clean)[colnames(ray_clean)=="QUARRY"] <- "sitename"
-colnames(ray_clean)[colnames(ray_clean)=="DATE.COLLECTED"] <- "verbatimEventDate"
-colnames(ray_clean)[colnames(ray_clean)=="SEX"] <- "sex"
-colnames(ray_clean)[colnames(ray_clean)=="AGE"] <- "ageValue"
-colnames(ray_clean)[colnames(ray_clean)=="template"] <- "measurementType"
-colnames(ray_clean)[colnames(ray_clean)=="value"] <- "measurementValue"
-colnames(ray_clean)[colnames(ray_clean)=="SIDE"] <- "measurementSide"
-ray_clean$measurementUnit <- "mm"
+#next change names to match template
+for(i in 1:length(ray_clean$SPEC_ID)){
+  ray_clean$x[i] <- ontology$ontologyTerm[ontology$measurement == ray_clean$measurement[i]]
+}
+ray_clean$variable <- ray_clean$x
+
+cols <- colnames(ray_clean)
+x <- c()
+for(i in 1:length(cols)){
+  if(isTRUE(colnames(ray_clean)[i] %in% template$columnName[template$dataset == "ray"])){
+  colnames(ray_clean)[i] <- template$templateTerm[template$columnName == cols[i] & template$dataset == "ray"]
+  }
+  else{
+    x[i] <- colnames(ray_clean)[i]
+  }
+}
+z <- x[!is.na(x)]
+
+#add missing columns
 ray_clean$individualID <- ray_clean$materialSampleID
+ray_clean$measurementUnit <- rep("mm", length(ray_clean[1]))
 
-#create species name
-ray_clean$scientificName <- paste(ray_clean$GENUS, ray_clean$SPECIES, sep = " ")
-
-#get rid of BONE, COUNTRY, LOCALITY, GENUS, and SPECIES
+#get rid of PROTECTED, BONE, COUNTRY, LOCALITY, GENUS, and SPECIES
 ray_clean.1 <- ray_clean[,c(-(2:6),-10)]
+
 
 #get rid of NAs
 ray_clean.2 <- ray_clean.1[!(is.na(ray_clean.1$measurementValue)),]
