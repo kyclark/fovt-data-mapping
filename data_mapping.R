@@ -107,7 +107,7 @@ for(i in 1:length(ray_clean.1[,1])){
   ray_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
 }
 
-write.csv(ray_clean.1, "ray_data.csv", row.names = FALSE, quote = FALSE)
+#write.csv(ray_clean.1, "ray_data.csv", row.names = FALSE, quote = FALSE)
 
 ##Kitty's data
 kitty <- read.csv("https://de.cyverse.org/dl/d/0152B269-3942-4BC4-8FDC-E60B48B17EBD/MayaDeerMetrics_Cantryll_Emeryedits.csv", skip = 2, stringsAsFactors = FALSE)
@@ -196,7 +196,7 @@ for(i in 1:length(kitty_clean.1[,1])){
   kitty_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
 }
 
-#write.csv(kitty_clean.1, "kitty_data.csv", row.names=FALSE)
+#write.csv(kitty_clean.1, "kitty_data.csv", row.names=FALSE, quote = FALSE)
 
 ## VertNet data
 vertnet <- read.csv("https://de.cyverse.org/dl/d/338C987D-F776-4439-910F-3AD2CD1D06E2/mammals_no_bats_2019-03-13.csv", 
