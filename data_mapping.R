@@ -1,9 +1,11 @@
 #load packages
 require(reshape2)
+require(uuid)
 
-template_map <- read.csv("template_mapping.csv", stringsAsFactors = FALSE)
-ontology_map <- read.csv("ontology_mapping.csv", stringsAsFactors = FALSE)
-template <- read.csv("template.csv", stringsAsFactors = FALSE)
+#load mapping files
+template_map <- read.csv("https://de.cyverse.org/dl/d/8F853DFC-C42E-4627-AF25-D37D471A2B99/template_mapping.csv", stringsAsFactors = FALSE)
+ontology_map <- read.csv("https://de.cyverse.org/dl/d/656062D2-2092-4808-A32C-52E7585FB569/ontology_mapping.csv", stringsAsFactors = FALSE)
+template <- read.csv("https://de.cyverse.org/dl/d/6998897A-5722-493C-9423-3ECE56488922/template.csv", stringsAsFactors = FALSE)
 
 ## Ray's Data
 ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
@@ -47,12 +49,13 @@ ray_sub$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_sub$SPEC_ID)
 ray_sub1 <- ray_sub[,c(1:12,53:55,13:51)]
 
 #measurements are from 15:54
-ray_long <- melt(ray_sub1, id.vars = c(1:15), factorsAsStrings = FALSE)
+ray_long <- melt(ray_sub1, id.vars = c(1:15), factorsAsStrings = FALSE, variable.name = "meas.no")
+#need to change variable name to something else otherwise it accidently repopulates it as measurementType.1
 
 #select out specific measurements / change measurement names and map to template
-ray_long$measurement <- paste(ray_long$BONE, ray_long$variable, sep = " ")
+ray_long$measurement <- paste(ray_long$BONE, ray_long$meas.no, sep = " ")
 
-ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology$measurement[ontology$dataset == "ray"])
+ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology_map$measurement[ontology_map$dataset == "ray"])
 
 #clean up AGE
 #split dates
@@ -67,12 +70,12 @@ ray_long_sub$maximumChronometricAge <- sapply(strsplit(as.character(ray_long_sub
 ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 
 #for some reason variables are factors, and values are characters
-ray_clean$variable <- as.character(ray_clean$variable)
+ray_clean$meas.no <- as.character(ray_clean$meas.no)
 ray_clean$value <- as.numeric(ray_clean$value)
 
 #next change names to match template
 for(i in 1:length(ray_clean[,1])){
-  ray_clean$measurementType[i] <- ontology$ontologyTerm[ontology$measurement == ray_clean$measurement[i]]
+  ray_clean$measurementType[i] <- ontology_map$ontologyTerm[ontology_map$measurement == ray_clean$measurement[i]]
 }
 
 cols <- colnames(ray_clean)
@@ -96,22 +99,27 @@ ray_clean.1 <- ray_clean[,!(colnames(ray_clean) %in% z)]
 ray_clean.1$individualID <- ray_clean.1$materialSampleID
 ray_clean.1$measurementUnit <- rep("mm", length(ray_clean.1[1]))
 
-#write.csv(ray_clean.1, "ray_data.csv", row.names=TRUE)
+#generate UUID
+for(i in 1:length(ray_clean.1[,1])){
+  ray_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
+}
+
+#write.csv(ray_clean.1, "ray_data.csv", row.names = FALSE)
 
 ##Kitty's data
 kitty <- read.csv("https://de.cyverse.org/dl/d/0152B269-3942-4BC4-8FDC-E60B48B17EBD/MayaDeerMetrics_Cantryll_Emeryedits.csv", skip = 2, stringsAsFactors = FALSE)
 
 #measurements are: 16:101
-kitty_long <- melt(kitty, id.vars = 1:15)
+kitty_long <- melt(kitty, id.vars = 1:15, variable.name = "meas.no")
 
 #select out "focused traits"
 #https://docs.google.com/spreadsheets/d/1rU15rBo-JpopEqpxBXLWSqaecBXwtYpxBLjRImcCvDQ/edit#gid=0
 Kpattern <- "(?i)humerus|metacarpal|femur|astragalus|calcaneum" #(?i) makes it case insensitive
-Kx <- grep(Kpattern, kitty_long$variable, value = TRUE)
+Kx <- grep(Kpattern, kitty_long$meas.no, value = TRUE)
 
-kitty_sub <- kitty_long[kitty_long$variable %in% Kx,]
+kitty_sub <- kitty_long[kitty_long$meas.no %in% Kx,]
 
-kitty_long_sub <- subset(kitty_sub, kitty_sub$variable %in% ontology$measurement[ontology$dataset == "kitty"])
+kitty_long_sub <- subset(kitty_sub, kitty_sub$meas.no %in% ontology_map$measurement[ontology_map$dataset == "kitty"])
 
 kitty_clean <- kitty_long_sub[!(is.na(kitty_long_sub$value)),]
 
@@ -154,14 +162,13 @@ kitty_clean$Date <- gsub(" to ", "-", kitty_clean$Date)
 kitty_clean$minimumChronometricAge <- sapply(strsplit(as.character(kitty_clean$Date),'-'), "[", 1)
 kitty_clean$maximumChronometricAge <- sapply(strsplit(as.character(kitty_clean$Date),'-'), "[", 2)
 
-
 #change variable & value
-kitty_clean$variable <- as.character(kitty_clean$variable)
+kitty_clean$meas.no <- as.character(kitty_clean$meas.no)
 kitty_clean$value <- as.numeric(kitty_clean$value)
 
 #next change names to match template
 for(i in 1:length(kitty_clean[,1])){
-  kitty_clean$variable[i] <- ontology$ontologyTerm[ontology$measurement == kitty_clean$variable[i]]
+  kitty_clean$measurementType[i] <- ontology_map$ontologyTerm[ontology_map$measurement == kitty_clean$meas.no[i]]
 }
 
 cols <- colnames(kitty_clean)
@@ -180,6 +187,11 @@ for(i in 1:length(cols)){
 z <- x[!is.na(x)]
 
 kitty_clean.1 <- kitty_clean[,!(colnames(kitty_clean) %in% z)]
+
+#generate UUID
+for(i in 1:length(kitty_clean.1[,1])){
+  kitty_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
+}
 
 #write.csv(kitty_clean.1, "kitty_data.csv", row.names=FALSE)
 
