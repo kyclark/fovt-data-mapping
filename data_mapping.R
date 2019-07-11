@@ -3,8 +3,8 @@ require(reshape2)
 require(uuid)
 
 #load mapping files
-template_map <- read.csv("https://de.cyverse.org/dl/d/8F853DFC-C42E-4627-AF25-D37D471A2B99/template_mapping.csv", stringsAsFactors = FALSE)
-ontology_map <- read.csv("https://de.cyverse.org/dl/d/656062D2-2092-4808-A32C-52E7585FB569/ontology_mapping.csv", stringsAsFactors = FALSE)
+template_map <- read.csv("https://de.cyverse.org/dl/d/90DF107C-0E33-4696-8F1F-07134719C5E8/template_mapping.csv", stringsAsFactors = FALSE)
+ontology_map <- read.csv("https://de.cyverse.org/dl/d/23431D1B-D2B3-4CB7-94AD-2E86008C70BE/ontology_mapping.csv", stringsAsFactors = FALSE)
 template <- read.csv("https://de.cyverse.org/dl/d/6998897A-5722-493C-9423-3ECE56488922/template.csv", stringsAsFactors = FALSE)
 
 ## Ray's Data
@@ -196,7 +196,8 @@ for(i in 1:length(kitty_clean.1[,1])){
 #write.csv(kitty_clean.1, "kitty_data.csv", row.names=FALSE)
 
 ## VertNet data
-vertnet <- read.csv("https://de.cyverse.org/dl/d/338C987D-F776-4439-910F-3AD2CD1D06E2/mammals_no_bats_2019-03-13.csv", stringsAsFactors = FALSE)
+vertnet <- read.csv("https://de.cyverse.org/dl/d/338C987D-F776-4439-910F-3AD2CD1D06E2/mammals_no_bats_2019-03-13.csv", 
+                    stringsAsFactors = FALSE, nrows = 100)
 
 #select out "focused traits"
 #https://docs.google.com/spreadsheets/d/1rU15rBo-JpopEqpxBXLWSqaecBXwtYpxBLjRImcCvDQ/edit#gid=0
@@ -208,71 +209,76 @@ vertnet.2 <- vertnet[,-(90:105)]
 #need to put catalognumber [18], lat [20], long[21], collection code [19], institution code [59], scientific name [71], locality [63], occurrence id [65]
 df <- vertnet.2[,c(18:21,43,59,63:69,71,72,1:17,22:42,44:58,60:62,70,73:103)]
 
-#vertnet_sub <- vertnet.2[,vertnet.2 %in% Vx] #error: memory exhausted
-#vertnet_sub2 <- cbind(needs, vertnet_sub)
+#create long version
+vertnet_long <-  melt(df, id.vars = 1:15, variable.name = "meas.no")
 
-#get rid of empty data
-x <- length(df$catalognumber)
-index <- seq(1, length(x), 50000)
-steps <- length(index)
+##NEXT: select out specific measurements / change measurement names and map to template
+Vpattern <- "X1st_"
+Vx <- grep(Vpattern, vertnet_long$meas.no, value = TRUE)
+vertnet_long_sub <- vertnet_long[vertnet_long$meas.no %in% Vx,]
+vertnet_long_sub$meas.no <- gsub(Vpattern, "", vertnet_long_sub$meas.no)
 
-for(i in 1:length((index-1))){
-  assign(paste('X',i,sep=''),df) <- df[i:i+1,]
+#create new column for unit type that matches with id and measurement type
+V1pattern <- "?????????????????????_high|?????????????????????_low|?????????????????????_ambiguous|?????????????????????_estimated"
+V1x <- grep(V1pattern, vertnet_long_sub$meas.no, value = TRUE)
+vertnet_long_sub.1 <- vertnet_long_sub[!(vertnet_long_sub$meas.no %in% V1x),]
+
+
+for(i in 1:length(vertnet_long_sub.1[,1])){
+  if(isTRUE(vertnet_long_sub.1$value[vertnet_long_sub.1$meas.no == "sex_notation"][i] != "")){
+    vertnet_long_sub.1$sex[i] <- vertnet_long_sub.1$value[vertnet_long_sub.1$meas.no == "sex_notation"][i]
+  }
+  if(isTRUE(grepl(V2pattern, vertnet_long_sub$meas.no[i]))){
+    x <- grep(V2pattern, vertnet_long_sub$meas.no[i], value = TRUE)
+    vertnet_long_sub$measurementUnit <- x
+  }
+  if(isTRUE(vertnet_long_sub.1$value[vertnet_long_sub.1$meas.no == "life_stage_notation"][i] != ""))
 }
 
 
-index.1 <- quarter+1
-index.2 <- quarter*2
-index.3 <- index.2+1
-index.4 <- quarter*3
-index.5 <- index.4+1
-
-first.quarter <- vertnet.2[1:quarter,]
-second.quarter <- vertnet.2[index.1:index.2,]
-third.quarter <- vertnet.2[index.3:index.4,]
-fourth.quarter <- vertnet.2[index.5:quarter,]
-
-#create long version
-vertnet_long.1 <- melt(first.quarter, id.vars = 1:12) 
-vertnet_long.2 <- melt(second.quarter, id.vars = 1:12) 
-vertnet_long.3 <- melt(third.quarter, id.vars = 1:12)
-vertnet_long.4 <- melt(fourth.quarter, id.vars = 1:12)
-
-vertnet_long <- rbind(vertnet_long.1, vertnet_long.2, vertnet.3, vertnet.4)
-##NEXT: select out specific measurements / change measurement names and map to template
-
-Vpattern <- "?1st_"
-Vx <- grep(Vpattern, vertnet_long$variable, value = TRUE)
-vertnet.3 <- vertnet_long[vertnet_long$variable %in% Vx,]
-vertnet.4 <- gsub(Vpattern, "", vertnet.3)
-
-colnames(vertnet.4)[colnames(vertnet.4)=="catalognumber"] <- "catalogNumber"
-colnames(vertnet.4)[colnames(vertnet.4)=="collectioncode"] <- "collectionCode"
-colnames(vertnet.4)[colnames(vertnet.4)=="decimallatitude"] <- "decimalLatitude"
-colnames(vertnet.4)[colnames(vertnet.4)=="decimallongitude"] <- "decimalLongitude"
-colnames(vertnet.4)[colnames(vertnet.4)=="locality"] <- "verbatimLocality"
-colnames(vertnet.4)[colnames(vertnet.4)=="maximumelevationmeters"] <- "maximumElevationInMeters"
-colnames(vertnet.4)[colnames(vertnet.4)=="minimumelevationmeters"] <- "minimumElevationInMeters"
-#colnames(vertnet.4)[colnames(vertnet.4)=="occurrenceid"] <- ""
-#colnames(vertnet.4)[colnames(vertnet.4)=="occurrenceremarks"] <- ""
-#colnames(vertnet.4)[colnames(vertnet.4)=="recordedby"] <- ""
-colnames(vertnet.4)[colnames(vertnet.4)=="scientificname"] <- "scientificName"
-colnames(vertnet.4)[colnames(vertnet.4)=="variable"] <- "measurementType"
-colnames(vertnet.4)[colnames(vertnet.4)=="value"] <- "measurementValue"
-#colnames(vertnet.4)[colnames(vertnet.4)=="references"] <- "references"
+V2pattern <- "?????????????????????_units_inferred"
+V2x <- grep(V2pattern, vertnet_long_sub$meas.no, value = TRUE)
 
 #get rid of NAs
-vertnet.5 <- vernet.4[!is.na(vertnet.4$measurementValue),]
+vertnet_clean <- vertnet_long_sub[!is.na(vertnet_long_sub$value),]
+
+#next change names to match template
+for(i in 1:length(vertnet_clean[,1])){
+  vertnet_clean$measurementType[i] <- ontology_map$ontologyTerm[ontology_map$measurement == vertnet_clean$meas.no[i]]
+}
+
+cols <- colnames(vertnet.4)
+x <- c()
+for(i in 1:length(cols)){
+  if(isTRUE(colnames(vertnet.4)[i] %in% template_map$columnName)){
+    colnames(vertnet.4)[i] <- template_map$templateTerm[template_map$columnName == cols[i]]
+  }
+  else if(isTRUE(colnames(vertnet)[i] %in% template$column)){
+    colnames(vertnet.4)[i] <- template$column[template$column == cols[i]]
+  }
+  else{
+    x[i] <- colnames(vertnet.4)[i]
+  }
+}
+z <- x[!is.na(x)]
+
+vertnet.5 <- vertnet.4[,!(colnames(vertnet.4) %in% z)]
+
+#get rid of NAs
+vertnet.6 <- vernet.5[!is.na(vertnet.5$measurementValue),]
 
 #create new column for unit type that matches with id and measurement type
-V2pattern <- "?????????????_units_inferred"
-V2x <- grep(V2pattern, vertnet.5$measurementType, value = TRUE)
-vertnet_sub.1 <- vertnet.5[vertnet.5$measurementType %in% V2x,]
-vertnet_sub.2 <- vertnet.5[!(vertnet.5$measurementType %in% V2x),]
+V2pattern <- "?????????????_units_inferred|^\\_+|\\_+$"
+V2x <- grep(V2pattern, vertnet.6$measurementType, value = TRUE)
+vertnet_sub.1 <- vertnet.5[vertnet.6$measurementType %in% V2x,]
+vertnet_sub.2 <- vertnet.5[!(vertnet.6$measurementType %in% V2x),]
 
-colnames(vertnet_sub.1)[colnames(vertnet_sub.1)=="measurementValue"] <- "measurementUnit"
-#get rid of extra column
-vertnet_sub.3 <- vertnet_sub.1[,-("measurementType")]
+
+
+
+
+
+
 
 #check that sub.1 and sub.2 have the same number of rows
 
@@ -297,6 +303,12 @@ for(i in 1:length(vertnet.6$measurementType)){
     vertnet.6$measurementType[i] <- "body mass"
   }
 }
+
+#generate UUID
+for(i in 1:length(ray_clean.1[,1])){
+  ray_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
+}
+
 
 
 #write.csv(vertnet.4, "vertnet_data.csv", rownames = FALSE)

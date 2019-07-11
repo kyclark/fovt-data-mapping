@@ -17,3 +17,7 @@ kitty,Femur.GL,{femur length}
 kitty,Humerus.GLC,{line trochlea of humerus to caput of humerus}
 kitty,Humerus.GL,{humerus length}
 kitty,Metacarpal.BFp,{metacaral proximal breadth}
+vertnet,body_length,{full body length}
+vertnet,body_mass,{body mass}
+vertnet,ear_length,{ear length}
+vertnet,hind_foot_length,{hind food length}

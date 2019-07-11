@@ -15,3 +15,11 @@ kitty,ID,scientificName
 kitty,Side,measurementSide
 kitty,referenceSystem,minimumChronometricAgeReferenceSystem
 kitty,Age..modern.only.,ageValue
+vertnet,catalognumber,catalogNumber
+vertnet,collectioncode,collectionCode
+vertnet,decimallatitude,decimalLatitude
+vertnet,decimallongitude,decimalLongitude
+vertnet,locality,verbatimLocality
+vertnet,maximumelevationmeters,maximumElevationInMeters
+vertnet,minimumelevationmeters,minimumElevationInMeters
+vertnet,scientificname,scientificName
