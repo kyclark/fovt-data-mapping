@@ -5,7 +5,7 @@ require(uuid)
 #load mapping files
 template_map <- read.csv("https://de.cyverse.org/dl/d/90DF107C-0E33-4696-8F1F-07134719C5E8/template_mapping.csv", stringsAsFactors = FALSE)
 ontology_map <- read.csv("https://de.cyverse.org/dl/d/23431D1B-D2B3-4CB7-94AD-2E86008C70BE/ontology_mapping.csv", stringsAsFactors = FALSE)
-template <- read.csv("https://de.cyverse.org/dl/d/6998897A-5722-493C-9423-3ECE56488922/template.csv", stringsAsFactors = FALSE)
+template <- read.csv("https://de.cyverse.org/dl/d/105DF9B1-229D-4849-8A42-DA843240586E/template.csv", stringsAsFactors = FALSE)
 
 ## Ray's Data
 ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
@@ -230,14 +230,15 @@ for(i in 1:length(vertnet_long_sub.1[,1])){
   }
   if(isTRUE(grepl(V2pattern, vertnet_long_sub$meas.no[i]))){
     x <- grep(V2pattern, vertnet_long_sub$meas.no[i], value = TRUE)
-    vertnet_long_sub$measurementUnit <- x
+    vertnet_long_sub$measurementUnit[i] <- x
   }
-  if(isTRUE(vertnet_long_sub.1$value[vertnet_long_sub.1$meas.no == "life_stage_notation"][i] != ""))
+  if(isTRUE(vertnet_long_sub.1$value[vertnet_long_sub.1$meas.no == "life_stage_notation"][i] != "")){
+    vertnet_long_sub$lifeStage[i] <- vertnet_long_sub.1$value[vertnet_long_sub.1$meas.no == "life_stage_notation"][i]
+  }
+  else {
+    next()
+  }
 }
-
-
-V2pattern <- "?????????????????????_units_inferred"
-V2x <- grep(V2pattern, vertnet_long_sub$meas.no, value = TRUE)
 
 #get rid of NAs
 vertnet_clean <- vertnet_long_sub[!is.na(vertnet_long_sub$value),]
@@ -247,72 +248,26 @@ for(i in 1:length(vertnet_clean[,1])){
   vertnet_clean$measurementType[i] <- ontology_map$ontologyTerm[ontology_map$measurement == vertnet_clean$meas.no[i]]
 }
 
-cols <- colnames(vertnet.4)
+cols <- colnames(vertnet_clean)
 x <- c()
 for(i in 1:length(cols)){
-  if(isTRUE(colnames(vertnet.4)[i] %in% template_map$columnName)){
-    colnames(vertnet.4)[i] <- template_map$templateTerm[template_map$columnName == cols[i]]
+  if(isTRUE(colnames(vertnet_clean)[i] %in% template_map$columnName)){
+    colnames(vertnet_clean)[i] <- template_map$templateTerm[template_map$columnName == cols[i]]
   }
-  else if(isTRUE(colnames(vertnet)[i] %in% template$column)){
-    colnames(vertnet.4)[i] <- template$column[template$column == cols[i]]
+  else if(isTRUE(colnames(vertnet_clean)[i] %in% template$column)){
+    colnames(vertnet_clean)[i] <- template$column[template$column == cols[i]]
   }
   else{
-    x[i] <- colnames(vertnet.4)[i]
+    x[i] <- colnames(vertnet_clean)[i]
   }
 }
 z <- x[!is.na(x)]
 
-vertnet.5 <- vertnet.4[,!(colnames(vertnet.4) %in% z)]
-
-#get rid of NAs
-vertnet.6 <- vernet.5[!is.na(vertnet.5$measurementValue),]
-
-#create new column for unit type that matches with id and measurement type
-V2pattern <- "?????????????_units_inferred|^\\_+|\\_+$"
-V2x <- grep(V2pattern, vertnet.6$measurementType, value = TRUE)
-vertnet_sub.1 <- vertnet.5[vertnet.6$measurementType %in% V2x,]
-vertnet_sub.2 <- vertnet.5[!(vertnet.6$measurementType %in% V2x),]
-
-
-
-
-
-
-
-
-#check that sub.1 and sub.2 have the same number of rows
-
-#check that occurenceid is unique 
-U <- length(unique(vertnet.5$occurrenceid))
-O <- length(vertnet.5$occurrenceid)
-U == O
-vertnet.6 <- merge(vertnet_sub.3, vertnet_sub.2, by = "occurrenceid", all.x = TRUE, all.y = TRUE)
-#check that have original length
-M <- length(vertnet.6$occurrenceid)
-M == O
-
-#change names
-for(i in 1:length(vertnet.6$measurementType)){
-  if(isTRUE(vertnet.6$measurementType[i] == "total_length")){
-    vertnet.6$measurementType[i] <- "{full body length}"
-  }
-  else if(isTRUE(vertnet.6$measurementType[i] =="ear_length")){
-    vertnet.6$measurementType[i] <- "ear length"
-  }
-  else if(isTRUE(vertnet.6$measurementType[i] == "body_mass")){
-    vertnet.6$measurementType[i] <- "body mass"
-  }
-}
+vertnet_clean.1 <- vertnet_clean[,!(colnames(vertnet_clean) %in% z)]
 
 #generate UUID
-for(i in 1:length(ray_clean.1[,1])){
-  ray_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
+for(i in 1:length(vertnet_clean.1 [,1])){
+  vertnet_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
 }
 
-
-
-#write.csv(vertnet.4, "vertnet_data.csv", rownames = FALSE)
-
-#probably want to use the gather() function from tidyverse
-
-data %>% gather(Measurement, Value, M1:M23)
+#write.csv(vertnet_clean.1, "vertnet_data.csv", rownames = FALSE)
