@@ -43,7 +43,10 @@ ray_sub <- rbind(ray_sub1, ray_sub2)
 #create species name
 ray_sub$scientificName <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
 
-ray_sub$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_sub$SPEC_ID)
+ray_sub$SPEC_ID <- gsub("^\\s+|\\s+$", "", ray_sub$SPEC_ID) #^ at beginning
+ray_sub$scientificName <- gsub("  ", " ", ray_sub$scientificName)
+ray_sub$scientificName <- gsub("sp..", "sp. ", ray_sub$scientificName)
+ray_sub$scientificName <- gsub("^\\s+|\\s+$", "", ray_sub$scientificName) 
 
 #reorder columns
 ray_sub1 <- ray_sub[,c(1:12,53:55,13:51)]
@@ -104,7 +107,7 @@ for(i in 1:length(ray_clean.1[,1])){
   ray_clean.1$observationID[i] <- UUIDgenerate(use.time = NA)
 }
 
-#write.csv(ray_clean.1, "ray_data.csv", row.names = FALSE)
+write.csv(ray_clean.1, "ray_data.csv", row.names = FALSE, quote = FALSE)
 
 ##Kitty's data
 kitty <- read.csv("https://de.cyverse.org/dl/d/0152B269-3942-4BC4-8FDC-E60B48B17EBD/MayaDeerMetrics_Cantryll_Emeryedits.csv", skip = 2, stringsAsFactors = FALSE)
