@@ -62,6 +62,7 @@ ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology_map$measurem
 
 #clean up AGE
 #split dates
+#Quarry should be verbatim locality
 ## NOTE: THESE DATES ARE NOT IN CONSISTENT ORDER - CHECK W RAY
 ## ALSO: FOR SINGLE AGES - WHERE DOES IT GO?
 ## GET RID OF "?" AND "recent"
