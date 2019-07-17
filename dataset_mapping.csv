@@ -1,0 +1,3 @@
+id,title,filestore_file_name,embargo_y_n,fuzz_location_y_n,attribution_text,doi
+1,ray horses,ray_data.csv,n,n,insert citation here,
+2,kitty archaeology data,kitty_data.csv,n,n,insert citation here,
