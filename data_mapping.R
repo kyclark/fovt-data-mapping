@@ -1,9 +1,7 @@
-# load packages
+#load packages
 
-```R
 require(reshape2)
 require(uuid)
-```
 
 #load mapping files
 template_map <- read.csv("https://de.cyverse.org/dl/d/90DF107C-0E33-4696-8F1F-07134719C5E8/template_mapping.csv", stringsAsFactors = FALSE)
