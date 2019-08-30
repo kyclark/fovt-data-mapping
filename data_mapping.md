@@ -83,7 +83,7 @@ ray_sub2 <- subset(ray_safe, subset = c(ray_safe$BONE == "tibia" |
 ray_sub <- rbind(ray_sub1, ray_sub2)
 ```
 ```R
-#create species name
+#create column for binomial
 ray_sub$scientificName <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
 
 #clean up
