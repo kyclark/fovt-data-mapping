@@ -40,7 +40,6 @@ locality <- read.csv("https://de.cyverse.org/dl/d/736F420E-6474-45F0-82EE-6A43D1
 #get rid of protected sites
 ray_safe <- subset(ray, subset = ray$PROTECTED...P != "P")
 ```
-
 ```R
 #replace locality and country #s with actual names
 for(i in 1:length(ray_safe[,1])){
@@ -70,7 +69,6 @@ ray_sub2 <- subset(ray_safe, subset = c(ray_safe$BONE == "tibia" |
                                           ray_safe$BONE == "radius"))
 ray_sub <- rbind(ray_sub1, ray_sub2)
 ```
-
 ```R
 #create species name
 ray_sub$scientificName <- paste(ray_sub$GENUS, ray_sub$SPECIES, sep = " ")
@@ -110,7 +108,6 @@ ray_long_sub <- subset(ray_long, ray_long$measurement %in% ontology_map$measurem
 ray_long_sub$minimumChronometricAge <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 1)
 ray_long_sub$maximumChronometricAge <- sapply(strsplit(as.character(ray_long_sub$AGE),';|-|:'), "[", 2)
 ```
-
 ```R
 #clean up data
 #get rid of NAs
@@ -120,7 +117,6 @@ ray_clean <- ray_long_sub[!(is.na(ray_long_sub$value)),]
 ray_clean$meas.no <- as.character(ray_clean$meas.no)
 ray_clean$value <- as.numeric(ray_clean$value)
 ```
-
 ```R
 #next change names to match template
 for(i in 1:length(ray_clean[,1])){
@@ -148,7 +144,6 @@ ray_clean.1 <- ray_clean[,!(colnames(ray_clean) %in% z)]
 ray_clean.1$individualID <- ray_clean.1$materialSampleID
 ray_clean.1$measurementUnit <- rep("mm", length(ray_clean.1[1]))
 ```
-
 ```R
 #generate UUID
 for(i in 1:length(ray_clean.1[,1])){
@@ -165,7 +160,6 @@ This datset includes zooarcheological data for ungulates and some comparative sp
 #data
 kitty <- read.csv("https://de.cyverse.org/dl/d/0152B269-3942-4BC4-8FDC-E60B48B17EBD/MayaDeerMetrics_Cantryll_Emeryedits.csv", skip = 2, stringsAsFactors = FALSE)
 ```
-
 ```R
 #create long version so each trait has its own row
 #measurements are: 16:101
@@ -184,7 +178,6 @@ kitty_long_sub <- subset(kitty_sub, kitty_sub$meas.no %in% ontology_map$measurem
 
 kitty_clean <- kitty_long_sub[!(is.na(kitty_long_sub$value)),]
 ```
-
 ```R
 #move modern to a different group
 for(i in 1:length(kitty_clean$Period)){
@@ -225,7 +218,6 @@ kitty_clean$Date <- gsub(" to ", "-", kitty_clean$Date)
 kitty_clean$minimumChronometricAge <- sapply(strsplit(as.character(kitty_clean$Date),'-'), "[", 1)
 kitty_clean$maximumChronometricAge <- sapply(strsplit(as.character(kitty_clean$Date),'-'), "[", 2)
 ```
-
 ```R
 #change variable & value
 kitty_clean$meas.no <- as.character(kitty_clean$meas.no)
@@ -253,7 +245,6 @@ z <- x[!is.na(x)]
 
 kitty_clean.1 <- kitty_clean[,!(colnames(kitty_clean) %in% z)]
 ```
-
 ```R
 #generate UUID
 for(i in 1:length(kitty_clean.1[,1])){
@@ -286,7 +277,6 @@ df <- vertnet.2[,c(18:21,43,59,63:69,71,72,1:17,22:42,44:58,60:62,70,73:103)]
 #create long version
 vertnet_long <-  melt(df, id.vars = 1:15, variable.name = "meas.no")
 ```
-
 ```R
 ##NEXT: select out specific measurements / change measurement names and map to template
 Vpattern <- "X1st_"
@@ -316,13 +306,11 @@ for(i in 1:length(vertnet_long_sub.1[,1])){
   }
 }
 ```
-
 ```R
 #clean data
 #get rid of NAs
 vertnet_clean <- vertnet_long_sub[!is.na(vertnet_long_sub$value),]
 ```
-
 ```R
 #next change names to match template
 for(i in 1:length(vertnet_clean[,1])){
@@ -346,7 +334,6 @@ z <- x[!is.na(x)]
 
 vertnet_clean.1 <- vertnet_clean[,!(colnames(vertnet_clean) %in% z)]
 ```
-
 ```R
 #generate UUID
 for(i in 1:length(vertnet_clean.1 [,1])){
