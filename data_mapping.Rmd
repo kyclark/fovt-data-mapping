@@ -389,3 +389,9 @@ for(i in 1:length(vertnet_clean.1 [,1])){
 
 #write.csv(vertnet_clean.1, "vertnet_data.csv", rownames = FALSE)
 ```
+
+```{bash}
+ils/PATHTOFILE
+iput PATH
+iget PATH
+```
