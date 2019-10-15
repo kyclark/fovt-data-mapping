@@ -63,50 +63,6 @@ for(i in 1:length(ray_safe[,1])){
 }
 ```
 
-```{r setup, include=FALSE}
-install.packages("reticulate")
-library(reticulate)
-use_python("/Library/Frameworks/Python.framework/Versions/2.7/bin/python")
-
-#"/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7"
-#use_virtualenv("r-reticulate")
-py_available(TRUE)
-#reticulate::py_discover_config()
-py_install("pandas")
-```
-
-```{python}
-a = 7
-print(a)
-```
-
-```{python}
-# in terminal: pip install pandas
-py_install("pandas")
-import pandas as pd
-
-#data
-ray = pd.read_csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv")
-print(ray)
-
-#reference for bone abbreviations in the "ray" dataset
-boneAppr = pd.read_csv("https://de.cyverse.org/dl/d/C82D7659-5503-455B-8F7F-883DC3F1BAE0/BoneAbbr.csv")
-
-#reference for locality numbers in the "ray" dataset
-locality = pd.read_csv("https://de.cyverse.org/dl/d/736F420E-6474-45F0-82EE-6A43D1703DE2/2.LOCAL_6_24_2019FuTRESPROTECTED.csv")
-```
-
-```{python}
-#get rid of protected sites; these sites cannot yet be ingested
-notProtected = ray['PROTECTED = P'] != P
-ray_safe = ray[notProtected]
-```
-
-```{python}
-#replace locality and country #s with actual names
-
-```
-
 ### Focused traits
 We are going to focus on certain traits for now, and add in the rest of the traits in this dataset later. These traits are based off ["focused traits"](https://docs.google.com/spreadsheets/d/1rU15rBo-JpopEqpxBXLWSqaecBXwtYpxBLjRImcCvDQ/edit#gid=0)
 
