@@ -23,3 +23,6 @@ vertnet,locality,verbatimLocality
 vertnet,maximumelevationmeters,maximumElevationInMeters
 vertnet,minimumelevationmeters,minimumElevationInMeters
 vertnet,scientificname,scientificName
+vertnet,eventdate,verbatimEventDate
+vertnet,institutioncode,institutionCode
+vertnet,lifestage,lifeStage
