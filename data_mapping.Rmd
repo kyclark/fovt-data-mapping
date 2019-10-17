@@ -6,7 +6,7 @@ The following code is for preprocessing legacy data to get it ready for the pipe
 2. update template and ontology mapping in [GitHub](https://github.com/futres/fovt-data-mapping)
 3. upload new template_mapping and ontology_mapping in the discovery environment
 4. map traits to ontology
-5. map columns to the template 
+5. map columns to the template
 
 ```R
 #install packages
@@ -35,7 +35,7 @@ This is a legacy dataset that has been actively collected and curated since 1980
 
 ```R
 #data
-ray <- read.csv("https://de.cyverse.org/dl/d/16030E74-A54F-44B2-AA03-76B1A49FCA49/1.FuTRESEquidDbase_6_24_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
+ray <- read.csv("https://de.cyverse.org/dl/d/225CDD84-1A47-4E8A-B5A1-8952BF2DC274/00_ExtantEquus_9_22_2019.csv", stringsAsFactors = FALSE) #how to point to latest data version?
 
 #reference for bone abbreviations in the "ray" dataset
 boneAbbr <- read.csv("https://de.cyverse.org/dl/d/C82D7659-5503-455B-8F7F-883DC3F1BAE0/BoneAbbr.csv", stringsAsFactors = FALSE)
@@ -392,8 +392,14 @@ for(i in 1:length(vertnet_clean.1 [,1])){
 #write.csv(vertnet_clean.1, "vertnet_data.csv", rownames = FALSE)
 ```
 
-```{bash}
-ils/PATHTOFILE
-iput PATH
-iget PATH
-```
+## VerNet Deer Data
+This is all extact white-tailed deer (Odocoileus virginianus) data from VertNet. Selected traits are: hindfoot length, ear length, body length, & body mass.
+
+## Amelia's Data
+This is extant impala (Aepyceros melampus) from Africa. Selected traits are those that over lap with Kitty and Ray's data.
+
+## J. Blois's Data
+This is a dataset of Spermophilus beechyii from Blois et al. 2008. Selected traits are those that over lap with Kitty and Ray's data.
+
+## Joaquin's Data
+This is extinct horse data. Traits of interest need to overlap with Ray's data. Data file needs to be reorganized.
