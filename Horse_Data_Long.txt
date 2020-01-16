@@ -1,0 +1,1 @@
+	institutionCode	collectionCode	catalogNumber	skeletalElement	measurementSide	scientificName	decimalLatitude	decimalLongitude	locality	verbatimLocality	basisOfRecord	measurementType	measurementValue	measurementUnit	lithostratigraphicTerms	formation	member	references	trait	measurement
