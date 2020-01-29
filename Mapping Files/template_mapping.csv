@@ -1,28 +1,86 @@
-dataset,columnName,templateTerm
-all,variable,measurementType
-all,value,measurementValue
-ray,SPEC_ID,materialSampleID
-ray,QUARRY,sitename
-ray,DATE.COLLECTED,verbatimEventDate
-ray,SEX,sex
-ray,SIDE,measurementSide
-kitty,Site,sitename
-kitty,Provenience..field.number.,contextName
-kitty,ID.Catalog...cat..element.or.portion.,individualID
-kitty,Specimen.Catalog...cat..organism.,catalogNumber
-kitty,Period,culturalStratigraphyOccupationPeriod
-kitty,ID,scientificName
-kitty,Side,measurementSide
-kitty,referenceSystem,minimumChronometricAgeReferenceSystem
-kitty,Age..modern.only.,ageValue
-vertnet,catalognumber,catalogNumber
-vertnet,collectioncode,collectionCode
-vertnet,decimallatitude,decimalLatitude
-vertnet,decimallongitude,decimalLongitude
-vertnet,locality,verbatimLocality
-vertnet,maximumelevationmeters,maximumElevationInMeters
-vertnet,minimumelevationmeters,minimumElevationInMeters
-vertnet,scientificname,scientificName
-vertnet,eventdate,verbatimEventDate
-vertnet,institutioncode,institutionCode
-vertnet,lifestage,lifeStage
+templateTerm,need,kitty-zooarch,kitty - modern,Ray,VertNet,Amelia,Blois,Helena
+ageEstimationMethod,,,,,,,,
+ageUnit,,,,,,"Age (juv, prime adult, older adult, old) (split from lifeStage)",,
+ageValue,,,,,,"Age (juv, prime adult, older adult, old) (split from lifeStage)",,
+basisOfRecord,required,,,,,,,basisOfRecord (change to fossilSpecimen)
+bed,,,,,,,,
+catalogNumber,suggested,,,SPEC_ID (separated from institutionCode),,Specimen #,Specimen.Number (get rid of Institution Code),specimenID
+chronometricAgeID,,,,,,,,
+chronometricAgeProtocol,suggested if do either maximum or minimum chronometricAge,,,,,,,
+chronometricAgeUncertaintyInYears,suggested if do either maximum or minimum ChronometricAge,,,,,,,
+collectionCode,suggested,,,,,,,collectionCode
+coordinateUncertaintyInMeters,,,,,,,,
+country,,,,COUNTRY (refer to Country Code),,Country/Continent,,
+culturalAffiliations,,,,,,,,
+culturalContext,,,,,,,,
+culturalOccupationPeriod,,,,,,,,
+culturalRegions,,,,,,,,
+datasetName,,,,,,,,
+decimalLatitude,suggested (need this or locality),,,,,,dec.lat,decimalLatitude (get rid of S)
+decimalLongitude,suggested (need this or locality),,,,,,dec.long,decimalLongitude (get rid of W)
+dynamicProperties,,,,,,,,
+earliestAgeOrLowestStage,,,,,,,,
+earliestEonOrLowestEonothem,,,,,,,,
+earliestEpochOrLowestSeries,,,,,,,,
+earliestEraOrLowestErathem,,,,,,,,
+earliestPeriodOrLowestSystem,,,,,,,,
+eventRemarks,,,,,,,,
+fieldNumber,,,,,,,,
+formation,,,,,,,,formation
+geologicalContextID,,,,,,,,
+group,,,,,,,,
+highestBiostratigraphicZone,,,,,,,,
+individualID,suggested,,,,,,,
+informationWithheld,,,,,,,,
+institutionCode,suggested,,,SPEC_ID (separated from catalogNumber),,Museum,Specimen.Number (get rid of catalogNumber),institutionCode
+institutionID,,,,,,,,
+latestAgeOrHighestStage,,,,,,,,
+latestEonOrHighestEonothem,,,,,,,,
+latestEpochOrHighestSeries,,,,,,,,
+latestEraOrHighestErathem,,,,,,,,
+latestPeriodOrHighestSystem,,,,,,,,
+lifeStage,suggested,,,,,"Age (juv, prime adult, older adult, old) (split from num)",,
+lithostratigraphicTerms,,,,,,,,lithostratigraphicTerms
+locality,suggested (need this or lat/long),,,LOCALITY (refer to Locality Code),,,,sitename
+lowestBiostratigraphicZone,,,,,,,,
+materialSampleCondition,,,,,,,,
+materialSampleID,required,,,,,,,
+materialSampleType,suggested,,,,,,,
+maximumChronometricAge,,,,AGE,,,,
+maximumChronometricAgeReferenceSystem,,,,,,,,
+maximumDepthInMeters,,,,,,,,
+maximumElevationInMeters,,,,,,,,
+measurementAccuracy,suggested,,,,,,,precision
+measurementDeterminedBy,suggested,,,,,,,
+measurementDeterminedDate,suggested if have measurementDeterminedBy,,,,,,,
+measurementMethod,required,,,,,,,
+measurementRemarks,suggested,,,,,,,
+measurementSide,,,,SIDE,,,,side
+measurementType,required,,,,,,,measurementType
+measurementUnit,required,,,,,,,measurementUnit (change to mm)
+measurementValue,required,,,,,,,measurementValue
+member,,,,,,,,member
+minimumChronometricAge,,,,AGE,,,,
+minimumChronometricAgeReferenceSystem,,,,,,,,
+minimumDepthInMeters,,,,,,,,
+minimumElevationInMeters,,,,,,,,
+occurrenceID,,,,,,,,
+otherCatalogNumbers,,,,,,,Proxy.Specimen.Number; Annual.Specimen.Number; YOC.Specimen.Number,
+previousIdentifications,,,,,,,,
+references,suggested,,,,,,,references
+reproductiveCondition,,,,,,,,
+samplingProtocol,suggested,,,,,,,
+scientificName,required,,,GENUS + SPECIES,,Species,,scientificName
+sex,,,,SEX,,SEX,,sex
+stateProvince,,,,,,State/Province,,
+verbatimAgeValue,,,,,,,,
+verbatimDepth,,,,,,,,
+verbatimElevation,,,,,,,elevation.ft,
+verbatimEventDate,suggested,,,DATE COLLECTED,,,,collectionDate (verbatimEventDate)
+verbatimLatitude,,,,,,,,
+verbatimLifeStage,,,,,,,,
+verbatimLocality,,,,COLLECTION PLACE,,,,verbatimLocality
+verbatimLongitude,,,,,,,,
+,,EAP Acc#,,BONE,,Location Code,max.error,specimenType
+,,,,,,Notes,datum,
+,,,,,,,ignore S-AN,
