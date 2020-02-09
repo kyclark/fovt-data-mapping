@@ -7,7 +7,7 @@ helena_horse <- read.csv("Horse data_Helena.csv", header = TRUE)
 spermophilus <- read.csv("biogeo.csv", header = TRUE)
 vert_deer <- read.csv("ODOVIRGCLEAN.csv", header = TRUE)
 
-hist(kitty_mod$Total.Fresh.Weight..g.)
+hist(log10(kitty_mod$Total.Fresh.Weight..g.))
 hist(aepyceros$Weight)
 hist(or_cougars$Weight) #in lbs
 hist(spermophilus$body.mass.g)
@@ -16,3 +16,4 @@ hist(log10(vert_deer$X1st_body_mass))
 plot(kitty_mod$Weight.of.viscera..g. ~ kitty_mod$Total.Fresh.Weight..g.)
 plot(kitty_mod$Total.bone.weight..g. ~ kitty_mod$Total.Fresh.Weight..g.)
 plot(kitty_mod$Skin.weight..g. ~ kitty_mod$Total.Fresh.Weight..g.)
+
