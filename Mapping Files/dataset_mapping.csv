@@ -1,3 +1,0 @@
-id,title,filestore_file_name,embargo_t_f,fuzz_location_t_f,attribution_text,doi,indexed_t_f
-1,ray horses,ray_data.csv,true,true,insert citation here,,false
-2,kitty archaeology data,kitty_data.csv,true,true,insert citation here,,false
