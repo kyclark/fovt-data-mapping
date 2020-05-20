@@ -3,9 +3,9 @@ status,dataset,ID,label,source,term
 DONE,ray,,humerus M1,,{length line trochlea of humerus to ventral tubercle of humerus}
 DONE,ray,,humerus M5,,{humerus tubercle width}
 DONE,kitty,,Femur.GLC,,{length line of medial condyle of femur to greater trochanter}
-DONE,kitty,,Femur.GL,,{femur length}
+DONE,kitty,,Femur.GL,,
 DONE,kitty,,Humerus.GLC,,{length line trochlea of humerus to proximal head of humerus}
-DONE,kitty,,Humerus.GL,,{humerus length}
+DONE,kitty,,Humerus.GL,,
 ,kitty,,Metacarpal.BFp,,{metacaral proximal breadth}
 DONE,vertnet,,body_length,,{body length}
 DONE,vertnet,,body_mass,,{body mass}
@@ -16,7 +16,7 @@ DONE,vertnet,,tail_length,,{tail length}
 ,ray,,astragalus M3,,
 ,ray,,astragalus M4,,
 ,kitty,,Astragalus LmT,,
-,amelia,,Astragalus length of medial part of trochlea tali,,
+,kitty,,Astragalus length of medial part of trochlea tali,,
 ,ray,,astragalus M7,,
 ,kitty,,Astragalus greatest depth medial,,
 ,kitty,,Maximal medial depth,,
@@ -27,10 +27,10 @@ DONE,vertnet,,tail_length,,{tail length}
 ,ray,,astragalus M5,,
 ,kitty,,Astragalus Bfd,,
 ,kitty,,Astragalus distal articular breadth,,
-,amelia,,Breadth astragalus of facies articularis distalis,,
+,kitty,,Breadth astragalus of facies articularis distalis,,
 ,kitty,,Breadth of astragalus distal articular surface,,
 ,ray,,astragalus M6,,
-,amelia,,Astragalus distal articular depth,,
+,kitty,,Astragalus distal articular depth,,
 ,cougar,,total body length,,{body length with tail}
 ,kitty,,Calcaneus GL,,
 ,kitty,,Calcaneus GB,,
@@ -43,3 +43,73 @@ DONE,vertnet,,tail_length,,{tail length}
 ,kitty,,Tibia Bp,,
 ,kitty,,Tibia Bd,,
 ,kitty,,Tibia Dd,,
+,amelia,,Grst Breadth acss Orbits,,
+,amelia,,Grst Breadth across the premaxillae/Muzzle Width,,
+,amelia,,Occipital/Cranial Height (base of foramen magnum to top of the occipital region),,
+,amelia,,Skull width across mastoids immediately behind external auditory meati,,
+,amelia,,Length of nuchal crest (from nodual to nodual on nuchal crest),,
+,amelia,,Greatest Breadth of occipital condyles,,
+,amelia,,Greatest Breadth of Foramen Magnum,,
+,amelia,,Depth of Foramen Magnum,,
+,amelia,,Nuchal crest (1-5),,
+,amelia,,Grst Breadth of the base of paraoccipital process,,
+,amelia,,Length of the paraoccipital process,,
+,amelia,,"Width of Paraoccipital Process, right below auditory bullae",,
+,amelia,,Length of molar row (@ alvelous) Maxilla ,,
+,amelia,,Length of Premolar row (@ alvelous) Maxilla ,,
+,amelia,,Occlusal length M3,,{M3 length}
+,amelia,,Occlusal width M3,,{M3 width}
+,amelia,,Occlusal width M3_ remeasured 11_2016,,{M3 width}
+,amelia,,Occlusal length M2,,{M2 length}
+,amelia,,Occlusal length M2_remeasured 11_2016,,{M2 length}
+,amelia,,Occlusal width M2,,{M2 width}
+,amelia,,Occlusal width M2_remeasured 11_2016,,{M2 width}
+,amelia,,Occlusal length M1,,{M1 length}
+,amelia,,Occlusal width M1,,{M1 width}
+,amelia,,Occlusal length P4,,{P4 length}
+,amelia,,Occlusal Width P4,,{P4 width}
+,amelia,,Occlusal length P2,,{P2 length}
+,amelia,,Occlusal Width P2,,{P2 width}
+,amelia,,Anterior jaw length,,
+,amelia,,Posterior jaw length,,
+,amelia,,max width of the mandibluar angle,,
+,amelia,,Length of molar row (@ alvelous) Mandible ,,
+,amelia,,Length of Premolar row (@ alvelous) Mandible ,,
+,amelia,,Depth of Mandible between M1 and M2,,
+,amelia,,Depth of Mandible between M2 and M3,,
+,amelia,,Mandibular Width at M2,,
+,amelia,,Diastema depth at alveolus,,
+,amelia,,Occlusal length M3,,{m3 length}
+,amelia,,Occlusal length M3_remeasured 11_2016,,{m3 length}
+,amelia,,Occlusal width M3,,{m3 width}
+,amelia,,Occlusal width M3_remeasured 11_2016,,{m3 width}
+,amelia,,Occlusal length M2,,{m2 length}
+,amelia,,Occlusal length M2_remeasured 11_2016,,{m2 length}
+,amelia,,Occlusal width M2,,{m2 width}
+,amelia,,Occlusal width M2_remeasured 11_2016,,{m2 width}
+,amelia,,Occlusal length M1,,{m1 length}
+,amelia,,Occlusal length M1_remeasured 11_2016,,{m1 length}
+,amelia,,Occlusal width M1,,{m1 width}
+,amelia,,Occlusal width M1_remeasured 11_2016,,{m1 width}
+,amelia,,Occlusal length P4,,{p4 length}
+,amelia,,Occlusal width P4,,{p4 width}
+,amelia,,Occlusal length P2,,{p2 length}
+,amelia,,Occlusal width P2,,{p2 width}
+,amelia,,Humerus Length,,{humerus length}
+,amelia,,Humerus Width Shaft  AP,,
+,amelia,,Humerus Width Shaft ML,,
+,amelia,,Humerus Width Distal 1 (capitulum),,
+,amelia,,Humerus Width Distal 2 (epicondyles),,
+,amelia,,Humerus Width Proximal (humeral head),,
+,amelia,,Femur Length,,{femur length}
+,amelia,,Femur Width Shaft AP,,
+,amelia,,Femur Width ML,,
+,amelia,,Femur Width Distal 1 (region above condyles and below patellar surface),,
+,amelia,,Femur Width Distal 2 (condyles),,
+,amelia,,Femur Width Proximal 1 (intertrochanteric crest),,
+,amelia,,Femur Width Proxial 2 (less trochanter to head),,
+,amelia,,Medapodial Length,,
+,amelia,,Medapodial Width AP,,
+,amelia,,Medapodial Width ML,,
+,amelia,,Astragalus Length,,
+,amelia,,Astragalus Width,,
