@@ -32,7 +32,7 @@ cougar_data <- cougar_data[-c(9:11)]
   #change column "value" to appropriate name in template
   #add columns for units for weight and mass
     #what are those column names? (see template)
-    #populat weight with "g" and length with "mm"
+    #populate weight with "g" and length with "mm"
   
 ## dataset update -> trait description column
 cougar_dataV2 <- cougar_data %>% add_column("Trait Description" = NA, .after = "Weight")
