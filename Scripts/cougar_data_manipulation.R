@@ -6,7 +6,9 @@ library(dplyr)
 library(tibble)
 
 ## updated set gets rid of columns w no data
-cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
+cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
+cougar_data <- cougar_data[-c(9:11)]
+#cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
 
 ## update status
   ## A -> Intact
@@ -21,6 +23,15 @@ cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
   cougar_data$Sex[cougar_data$Sex == "F"] <- "Female"
   ## M -> Male
   cougar_data$Sex[cougar_data$Sex == "M"] <- "Male"
+  
+## To Do:
+  #rename weight and length column (see GEOME)
+  #make long version: melt(data, id.vars = metadata, variable.name = name from template)
+    #stringsAsFactors = FALSE
+  #get rid of rows that have "NA" as for trait values
+  #change column "value" to appropriate name in template
+  #add two columns for units for weight and mass
+    #what are those column names? (see template)
   
 ## dataset update -> trait description column
 cougar_dataV2 <- cougar_data %>% add_column("Trait Description" = NA, .after = "Weight")
