@@ -25,10 +25,12 @@ cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
 ## dataset update -> trait description column
 cougar_dataV2 <- cougar_data %>% add_column("Trait Description" = NA, .after = "Weight")
 
-## if weigh has value trait description == weight
+## if weigh has value trait description == weight 
 cougar_dataV2$`Trait Description`[!(is.na(cougar_data$Weight))] <- "Weight"
 
 ## rename column "Weight" to "Trait"
 cougar_dataV2 %>%
   rename("Trait Data" = Weight)
   
+## melt data
+melt(cougar_data, na.rm = TRUE, value.name = c("Date", "Management Unit", "County", "Sex", "Age", "Status"))
