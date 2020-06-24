@@ -25,6 +25,7 @@ cougar_data <- cougar_data[-c(9:11)]
 #cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
 
 ## update status
+  # need two arguments, the dataset and the column 
   status <- function(y){
     ## A -> Intact
       y[y == "A"] <- "Intact"
@@ -35,6 +36,7 @@ cougar_data <- cougar_data[-c(9:11)]
   }
   
 ## f -> female & m -> male
+    #need two arguments, data and column
   sex <- function(y){
     ## F -> Female
       y[y == "F"] <- "Female"
