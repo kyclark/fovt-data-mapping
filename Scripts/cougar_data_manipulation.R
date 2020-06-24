@@ -4,6 +4,7 @@
 library(tidyverse)
 library(dplyr)
 library(tibble)
+library(anchors)
 
 # ## update status
 # ## A -> Intact
@@ -28,20 +29,22 @@ cougar_data <- cougar_data[-c(9:11)]
   # need two arguments, the dataset and the column
   cougar_status <- function(x, y){
     ## A -> Intact
-      x[x$y == "A"] <- "Intact" #see what I changed here
+      replace.value(x, y, from = "A", to = "Intact")
     ## B -> Field Dressed
-      x[x$y == "B"] <- "Field Dressed"
+      replace.value(x, y, from = "B", to = "Field Dressed")
     ## C -> Skinned
-      x[x$y == "C"] <- "Skinned"
+      replace.value(x, y, from = "C", to = "Skinned")
+    return(x)
   }
   
 ## f -> female & m -> male
     #need two arguments, data and column
-  cougar_sex <- function(x, y){
+  cougar_sex <- function(x, "y"){
     ## F -> Female
-      x[x$y == "F"] <- "Female"
+      x[y == "F"] <- "Female"
     ## M -> Male
-      x[x$y == "M"] <- "Male"
+      x[y == "M"] <- "Male"
+      return(x)
   }
   
 ## melt data
