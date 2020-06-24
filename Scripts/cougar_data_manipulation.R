@@ -30,18 +30,18 @@ cougar_data <- cougar_data[-c(9:11)]
     ## A -> Intact
       x[x$y == "A"] <- "Intact" #see what I changed here
     ## B -> Field Dressed
-      x$y[x$y == "B"] <- "Field Dressed"
+      x[x$y == "B"] <- "Field Dressed"
     ## C -> Skinned
-      x$y[x$y == "C"] <- "Skinned"
+      x[x$y == "C"] <- "Skinned"
   }
   
 ## f -> female & m -> male
     #need two arguments, data and column
   cougar_sex <- function(x, y){
     ## F -> Female
-      x$y[x$y == "F"] <- "Female"
+      x[x$y == "F"] <- "Female"
     ## M -> Male
-      x$y[x$y == "M"] <- "Male"
+      x[x$y == "M"] <- "Male"
   }
   
 ## melt data
