@@ -28,7 +28,7 @@ cougar_data <- cougar_data[-c(9:11)]
   # need two arguments, the dataset and the column
   cougar_status <- function(x, y){
     ## A -> Intact
-      x$y[x$y == "A"] <- "Intact"
+      x[x$y == "A"] <- "Intact" #see what I changed here
     ## B -> Field Dressed
       x$y[x$y == "B"] <- "Field Dressed"
     ## C -> Skinned
