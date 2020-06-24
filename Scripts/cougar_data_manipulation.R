@@ -46,3 +46,5 @@ cougar_dataV2 %>%
   
 ## melt data
 melt(cougar_data, na.rm = TRUE, value.name = c("Date", "Management Unit", "County", "Sex", "Age", "Status"))
+
+## creating functions
