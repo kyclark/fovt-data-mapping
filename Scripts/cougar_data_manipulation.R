@@ -25,23 +25,23 @@ cougar_data <- cougar_data[-c(9:11)]
 #cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
 
 ## update status
-  # need two arguments, the dataset and the column 
-  status <- function(y){
+  # need two arguments, the dataset and the column
+  cougar_status <- function(x, y){
     ## A -> Intact
-      y[y == "A"] <- "Intact"
+      x$y[x$y == "A"] <- "Intact"
     ## B -> Field Dressed
-      y[y == "B"] <- "Field Dressed"
+      x$y[x$y == "B"] <- "Field Dressed"
     ## C -> Skinned
-      y[y == "C"] <- "Skinned"
+      x$y[x$y == "C"] <- "Skinned"
   }
   
 ## f -> female & m -> male
     #need two arguments, data and column
-  sex <- function(y){
+  cougar_sex <- function(x, y){
     ## F -> Female
-      y[y == "F"] <- "Female"
+      x$y[x$y == "F"] <- "Female"
     ## M -> Male
-      y[y == "M"] <- "Male"
+      x$y[x$y == "M"] <- "Male"
   }
   
 ## melt data
@@ -72,5 +72,5 @@ cougar_data_final$measurementUnit[cougar_data_final$measurementType == "Weight"]
 cougar_data_final$measurementUnit[cougar_data_final$measurementType == "Length"] <- "mm"
 
 ## call functions
-status(cougar_data_final$Status)
-sex(cougar_data_final$Sex)
+cougar_status(cougar_data_final, Status)
+cougar_sex(cougar_data_final, Sex)
