@@ -25,6 +25,10 @@ cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D5
 cougar_data <- cougar_data[-c(9:11)]
 #cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
 
+##To do:
+# change cougar_status and cougar_sex to a for loop with if statemetns
+# change for loops into a function
+
 ## update status
   # need two arguments, the dataset and the column
   cougar_status <- function(x, y){
