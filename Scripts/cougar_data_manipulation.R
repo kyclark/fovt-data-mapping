@@ -25,6 +25,7 @@ cougar_data <- cougar_data[-c(9:11)]
   cougar_data$Sex[cougar_data$Sex == "M"] <- "Male"
   
 ## To Do:
+  #rename metadata columns to match the template (try to use template mapping file)
   #rename weight and length column (see GEOME)
   #make long version: melt(data, id.vars = metadata, variable.name = name from template)
     #stringsAsFactors = FALSE
@@ -48,3 +49,5 @@ cougar_dataV2 %>%
 melt(cougar_data, na.rm = TRUE, value.name = c("Date", "Management Unit", "County", "Sex", "Age", "Status"))
 
 ## creating functions
+  # create a function for gender
+  # create a function for status
