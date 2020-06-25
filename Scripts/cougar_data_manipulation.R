@@ -32,14 +32,37 @@ cougar_data <- cougar_data[-c(9:11)]
 
 ## update status
   # need two arguments, the dataset and the column
+
+status <- function(x, y) {
+  for(i in 1:nrow(x)) {
+    if(isTRUE(x[,y][i] == "A")){
+      x[,y][i] <- "Intact"
+    }
+    else if(isTRUE(x[,y][i] == "B")){
+      x[,y][i] <- "Field Dressed"
+    }
+    else if(isTRUE(x[,y][i] == "C")){
+      x[,y][i] <- "Skinned"
+    }
+    else {
+      next
+    }
+  }
+}
+
   cougar_status <- function(x, y) {
     for(i in 1:nrow(x)) {
-      if(x[x$y] == "A"){
+      if(isTRUE( == "A"){
         x[x$y] <<- "Intact"
-      }else if(x[x$y] == "B"){
+      }
+      else if(x[x$y] == "B"){
         x[x$y] <<- "Field Dressed"
-      }else{
+      }
+      else if{
         x[x$y] <<- "Skinned"
+      }
+      else{
+        next
       }
     }
     }
