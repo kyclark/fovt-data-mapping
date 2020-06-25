@@ -5,6 +5,7 @@ library(tidyverse)
 library(dplyr)
 library(tibble)
 library(anchors)
+library(plyr)
 
 # ## update status
 # ## A -> Intact
@@ -26,29 +27,34 @@ cougar_data <- cougar_data[-c(9:11)]
 #cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
 
 ##To do:
-# change cougar_status and cougar_sex to a for loop with if statemetns
+# change cougar_status and cougar_sex to a for loop with if statements
 # change for loops into a function
 
 ## update status
   # need two arguments, the dataset and the column
-  cougar_status <- function(x, y){
-    ## A -> Intact
-      replace.value(x, y, from = "A", to = "Intact")
-    ## B -> Field Dressed
-      replace.value(x, y, from = "B", to = "Field Dressed")
-    ## C -> Skinned
-      replace.value(x, y, from = "C", to = "Skinned")
-    return(x)
-  }
+  cougar_status <- function(x, y) {
+    for(i in 1:nrow(x)) {
+      if(x[x$y] == "A"){
+        x[x$y] <<- "Intact"
+      }else if(x[x$y] == "B"){
+        x[x$y] <<- "Field Dressed"
+      }else{
+        x[x$y] <<- "Skinned"
+      }
+    }
+    }
   
 ## f -> female & m -> male
     #need two arguments, data and column
-  cougar_sex <- function(x, "y"){
-    ## F -> Female
-      x[y == "F"] <- "Female"
-    ## M -> Male
-      x[y == "M"] <- "Male"
-      return(x)
+  cougar_sex <- function(x, y){
+    for(i in 1:nrow(x)) {
+      if(x$y[i] == "F"){
+        x$y[i] <<- "Female"
+      }else{
+        x$y[i] <<- "Male"
+      }
+    }
+    return(x)
   }
   
 ## melt data
