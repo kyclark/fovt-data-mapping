@@ -1,89 +1,69 @@
 ## cougar data set
 
 ## installed packages
-library(tidyverse)
-library(dplyr)
-library(tibble)
-library(anchors)
-library(plyr)
-
-# ## update status
-# ## A -> Intact
-# cougar_data$Status[cougar_data$Status == "A"] <- "Intact"
-# ## B -> Field Dressed
-# cougar_data$Status[cougar_data$Status == "B"] <- "Field Dressed"
-# ## C -> Skinned
-# cougar_data$Status[cougar_data$Status == "C"] <- "Skinned"
-
-# ## f -> female & m -> male
-# ## F -> Female
-# cougar_data$Sex[cougar_data$Sex == "F"] <- "Female"
-# ## M -> Male
-# cougar_data$Sex[cougar_data$Sex == "M"] <- "Male"
+  library(tidyverse)
+  library(dplyr)
+  library(tibble)
+  library(anchors)
+  library(plyr)
+  library(reshape2)
 
 ## updated set gets rid of columns w no data
-cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
-cougar_data <- cougar_data[-c(9:11)]
-#cougar_data <- X1987_2019_Cougar_Weight_Length_Public_Request[-c(9:11)]
-
-##To do:
-# change cougar_status and cougar_sex to a for loop with if statements
-# change for loops into a function
+  cougar_template <- column.name.template
+  cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
+  cougar_data <- cougar_data[-c(9:11)]
 
 ## update status
-  # need two arguments, the dataset and the column
-  cougar_status <- function(x, y) {
-    for(i in 1:nrow(x)) {
-      if(x[x$y] == "A"){
-        x[x$y] <<- "Intact"
-      }else if(x[x$y] == "B"){
-        x[x$y] <<- "Field Dressed"
-      }else{
-        x[x$y] <<- "Skinned"
-      }
-    }
+  cougar_status <- function(x, y) 
+    {
+      x[,y][x[,y] == "A" | x[,y] == "a"] <- "Intact"
+      x[,y][x[,y] == "B" | x[,y] == "b"] <- "Field Dressed"
+      x[,y][x[,y] == "C" | x[,y] == "c"] <- "Skinned"
+      return(x)
     }
   
 ## f -> female & m -> male
-    #need two arguments, data and column
-  cougar_sex <- function(x, y){
-    for(i in 1:nrow(x)) {
-      if(x$y[i] == "F"){
-        x$y[i] <<- "Female"
-      }else{
-        x$y[i] <<- "Male"
-      }
+  cougar_sex <- function(x, y)
+    {
+      x[,y][x[,y] == "M" | x[,y] == "m"] <- "Male"
+      x[,y][x[,y] == "F" | x[,y] == "f"] <- "Female"
+      return(x)
     }
-    return(x)
-  }
+
+## melt data & filter empty values
+  cougar_melt <- function(x, y, z)
+    {
+      x <- melt(x, measure.vars = c(y, z))
+      dplyr::filter(x, !is.na(value))
+    }
   
-## melt data
-test <- melt(cougar_data, id.vars = c("Date", 
-                                      "Management.Unit", 
-                                      "County", "Sex", 
-                                      "Status", "Age"), 
-             variable.name = c("Length", "Weight"))
+## add new column measuremnetUnit
+  cougar_add_col <- function(x){
+    add_column(x, measurementUnit = NA)
+  }
+## populate measurementUnit
+  cougar_measurement_unit <- function(x, y, z)
+    {
+      x[,y][x[,z] == "Weight"] <- "g"
+      x[,y][x[,z] == "Length"] <- "mm"
+      return(x)
+    }
 
-## rename to final
-cougar_data_final <- test
 
-## rename columns
-cougar_data_final <- cougar_data_final %>%
-  rename(c("yearCollected" = "Date", 
-           "measurementValue" = "value", 
-           "Locality" = "Management.Unit", 
-           "measurementType" = "variable"))
+cougar_data <- cougar_status(cougar_data, "Status")
+cougar_data <- cougar_sex(cougar_data, "Sex")
+cougar_data <- cougar_melt(cougar_data, "Length", "Weight")
+cougar_data <- cougar_add_col(cougar_data)
+cougar_data <- cougar_measurement_unit(cougar_data, "measurementUnit", "variable")
 
-## remove empty values
-cougar_data_final <- dplyr::filter(cougar_data_final,  !is.na(measurementValue))
+cols <- colnames(cougar_data)
+x <- c()
+for(i in 1:length(cols))
+{
+  if(isTRUE(colnames(cougar_data)[i] %in% cougar_template$Column.Name))
+  {
+    #change column name to reflect template column as matched in template_mapping
+    colnames(cougar_data)[i] <- cougar_template$Template.Name[cougar_template$Column.Name == cols[i]]
+  }
+}
 
-## add weight & mass units column
-cougar_data_final$measurementUnit <- NA
-
-## populate weight with "g" and length with "mm"
-cougar_data_final$measurementUnit[cougar_data_final$measurementType == "Weight"] <- "g"
-cougar_data_final$measurementUnit[cougar_data_final$measurementType == "Length"] <- "mm"
-
-## call functions
-cougar_status(cougar_data_final, Status)
-cougar_sex(cougar_data_final, Sex)
