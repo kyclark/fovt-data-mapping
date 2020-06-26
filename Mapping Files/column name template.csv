@@ -1,1 +1,10 @@
-﻿yearCollected,Locality,County,Sex,Status,Age,measurementType,measurementValue,measurementUnit
+﻿Column.Name,Template.Name
+Date,yearCollected
+Management.Unit,Locality
+County,County
+Sex,Sex
+Age,Age
+Status,Status
+variable,measurementType
+value,measurementValue
+measurementUnit,measurementUnit
