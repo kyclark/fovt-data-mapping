@@ -23,6 +23,7 @@ cougar_status <- function(x, y)
 }
 
 ## f -> female & m -> male
+#try to use grepl("[F][f]", "female")
 cougar_sex <- function(x, y)
 {
   x[,y][x[,y] == "M" | x[,y] == "m"] <- "Male"
@@ -49,6 +50,7 @@ cougar_measurement_unit <- function(x, y, z)
   return(x)
 }
 
+#I wonder if this could be piped?:
 cougar_data <- cougar_status(cougar_data, "Status")
 cougar_data <- cougar_sex(cougar_data, "Sex")
 cougar_data <- cougar_melt(cougar_data, "Length", "Weight")
