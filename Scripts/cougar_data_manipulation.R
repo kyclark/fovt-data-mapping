@@ -49,7 +49,6 @@
       return(x)
     }
 
-
 cougar_data <- cougar_status(cougar_data, "Status")
 cougar_data <- cougar_sex(cougar_data, "Sex")
 cougar_data <- cougar_melt(cougar_data, "Length", "Weight")
@@ -66,4 +65,5 @@ for(i in 1:length(cols))
     colnames(cougar_data)[i] <- cougar_template$Template.Name[cougar_template$Column.Name == cols[i]]
   }
 }
+
 
