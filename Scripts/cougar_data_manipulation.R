@@ -8,8 +8,9 @@ library(anchors)
 library(plyr)
 library(reshape2)
 
+
 ## updated set gets rid of columns w no data
-cougar_template <- column.name.template
+cougar_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/column%20name%20template.csv")
 cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
 cougar_data <- cougar_data[-c(9:11)]
 
@@ -23,12 +24,12 @@ cougar_status <- function(x, y)
 }
 
 ## f -> female & m -> male
+#try to use grepl("[F][f]", "female")
 cougar_sex <- function(x, y)
 {
-  x[,y][x[,y] == "M" | x[,y] == "m"] <- "Male"
-  x[,y][x[,y] == "F" | x[,y] == "f"] <- "Female"
-  return(x)
+  gsub("[F][f]", "Female", )
 }
+
 
 ## melt data & filter empty values
 cougar_melt <- function(x, y, z)
@@ -49,21 +50,23 @@ cougar_measurement_unit <- function(x, y, z)
   return(x)
 }
 
+cougar_col_rename <- function(a, b, c, d)
+{
+  cols <- colnames(a)
+  x <- c()
+  for(i in 1:length(cols))
+  {
+    if(isTRUE(colnames(a)[i][b[,c]]))
+    {
+      colnames(a)[i] <- b[,d][b[,c] == cols[i]]
+    }
+  }
+}
+
+#I wonder if this could be piped?:
 cougar_data <- cougar_status(cougar_data, "Status")
 cougar_data <- cougar_sex(cougar_data, "Sex")
 cougar_data <- cougar_melt(cougar_data, "Length", "Weight")
 cougar_data <- cougar_add_col(cougar_data)
 cougar_data <- cougar_measurement_unit(cougar_data, "measurementUnit", "variable")
-
-cols <- colnames(cougar_data)
-x <- c()
-for(i in 1:length(cols))
-{
-  if(isTRUE(colnames(cougar_data)[i] %in% cougar_template$Column.Name))
-  {
-    #change column name to reflect template column as matched in template_mapping
-    colnames(cougar_data)[i] <- cougar_template$Template.Name[cougar_template$Column.Name == cols[i]]
-  }
-}
-
-
+cougar_test_1 <- cougar_col_rename(cougar_data, cougar_template, "Column.Name", "Template.Name")
