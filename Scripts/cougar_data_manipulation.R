@@ -27,7 +27,7 @@ cougar_status <- function(x, y)
 #try to use grepl("[F][f]", "female")
 cougar_sex <- function(x, y)
 {
-  gsub("[F][f]", "Female", )
+  gsub("[F][f]", "Female" )
 }
 
 
@@ -50,20 +50,10 @@ cougar_measurement_unit <- function(x, y, z)
   return(x)
 }
 
-<<<<<<< HEAD
-cougar_col_rename <- function(a, b, c, d)
-=======
-#I wonder if this could be piped?:
-cougar_data <- cougar_status(cougar_data, "Status")
-cougar_data <- cougar_sex(cougar_data, "Sex")
-cougar_data <- cougar_melt(cougar_data, "Length", "Weight")
-cougar_data <- cougar_add_col(cougar_data)
-cougar_data <- cougar_measurement_unit(cougar_data, "measurementUnit", "variable")
-
+cougar_col_rename <- function(a, b, c, d){
 cols <- colnames(cougar_data)
 x <- c()
 for(i in 1:length(cols))
->>>>>>> 5f3b1ebf25009b350d220a19fec820e0eb699aad
 {
   cols <- colnames(a)
   x <- c()
@@ -74,6 +64,7 @@ for(i in 1:length(cols))
       colnames(a)[i] <- b[,d][b[,c] == cols[i]]
     }
   }
+}
 }
 
 #I wonder if this could be piped?:
