@@ -23,13 +23,15 @@ cougar_status <- function(x, y)
   return(x)
 }
 
-# ## f -> female & m -> male
-# #try to use grepl("[F][f]", "female")
-# cougar_sex <- function(x, y)
-# {
-#   gsub("[F][f]", "Female" )
-# }
+## f -> female & m -> male
 
+cougar_sex <- function(x, y)
+{
+  x <- gsub("F\\.|f\\.", "Female", x[,y][x[,y]])
+  x <- gsub("M\\.|m\\.", "Male", x[,y][x[,y]])
+  return(x)
+}
+cougar_data <- cougar_sex(cougar_data, "Sex")
 
 ## melt data & filter empty values
 cougar_melt <- function(x, y, z)
@@ -67,7 +69,7 @@ cougar_col_rename <- function(a, b, c, d)
 
 #I wonder if this could be piped?:
 cougar_data <- cougar_status(cougar_data, "Status")
-cougar_data <- cougar_sex(cougar_data, "Sex")
+#cougar_data <- cougar_sex(cougar_data, "Sex")
 cougar_data <- cougar_melt(cougar_data, "Length", "Weight")
 cougar_data <- cougar_add_col(cougar_data)
 cougar_data <- cougar_measurement_unit(cougar_data, "measurementUnit", "variable")
