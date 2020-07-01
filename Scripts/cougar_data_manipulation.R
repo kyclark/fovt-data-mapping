@@ -32,9 +32,17 @@ cougar_status <- function(x, y)
 
 cougar_sex <- function(x, y)
 {
+<<<<<<< HEAD
   x[,y] <- grepl(pattern = "f", x[,y], ignore.case = TRUE)
   x[,y][x[,y] == TRUE] <- "Female"
   x[,y][x[,y] == FALSE] <- "Male"
+=======
+  # use gsub so that F (upper or lower case) is the first letter and we don't care what comes after
+  # replace with "Female"
+  # x[,y] <- grsub(pattern, replacement, x[,y])
+  x <- gsub("F\\.|f\\.", "Female", x[,y][x[,y]])
+  x <- gsub("M\\.|m\\.", "Male", x[,y][x[,y]])
+>>>>>>> 0021889a16300b1adcb0f2a6e4c73ea7cf3927ac
   return(x)
 }
 
