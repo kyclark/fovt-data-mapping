@@ -20,6 +20,11 @@ cougar_data <- cougar_data[-c(9:11)]
 # x[,y][x[,y] == "C" | x[,y] == "c"] <- "Skinned"
 
 ## update status
+
+#let's make this more general
+#give the function 2 more arguments, which are vectors
+#the first vector is the unique data entries (e.g., "A","B","C")
+#the second vector is the appropriate terms (e.g., "whole organism","part organism - field dressed", "part organism - skinned")
 cougar_status <- function(x, y) 
 {
   x[,y][x[,y] == "A" | x[,y] == "a"] <- "Intact"
@@ -30,6 +35,8 @@ cougar_status <- function(x, y)
 
 ## f -> female & m -> male
 
+#we don't want to assert that a data entry is male if it is N/A
+#modify so that x[,y] must start with "m" or "M" to be "Male"
 cougar_sex <- function(x, y)
 {
   x[,y] <- grepl(pattern = "f", x[,y], ignore.case = TRUE)
@@ -74,6 +81,7 @@ cougar_col_rename <- function(a, b, c, d)
   return(a)
 }
 
+#so great! We'll see if this works with other datasets or if we need to break it apart.
 cleanup_data <- function(x)
 {
   x <- x %>%
