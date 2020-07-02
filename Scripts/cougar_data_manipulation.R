@@ -15,33 +15,36 @@ cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D5
 cougar_data <- cougar_data[-c(9:11)]
 
 
-# x[,y][x[,y] == "A" | x[,y] == "a"] <- "Intact"
-# x[,y][x[,y] == "B" | x[,y] == "b"] <- "Field Dressed"
-# x[,y][x[,y] == "C" | x[,y] == "c"] <- "Skinned"
-
 ## update status
 
 #let's make this more general
 #give the function 2 more arguments, which are vectors
 #the first vector is the unique data entries (e.g., "A","B","C")
 #the second vector is the appropriate terms (e.g., "whole organism","part organism - field dressed", "part organism - skinned")
-cougar_status <- function(x, y) 
+cougar_status <- function(a, b, c, d) 
 {
-  x[,y][x[,y] == "A" | x[,y] == "a"] <- "Intact"
-  x[,y][x[,y] == "B" | x[,y] == "b"] <- "Field Dressed"
-  x[,y][x[,y] == "C" | x[,y] == "c"] <- "Skinned"
-  return(x)
+  for(i in 1:length(c)){
+    a[,b][a[,b] == c[i]] <- d[i]
+  }
+  return(a)
 }
 
 ## f -> female & m -> male
-
 #we don't want to assert that a data entry is male if it is N/A
 #modify so that x[,y] must start with "m" or "M" to be "Male"
 cougar_sex <- function(x, y)
 {
-  x[,y] <- grepl(pattern = "f", x[,y], ignore.case = TRUE)
-  x[,y][x[,y] == TRUE] <- "Female"
-  x[,y][x[,y] == FALSE] <- "Male"
+  test <- x
+  test[,y] <- grep(pattern = "f", x[,y], ignore.case = TRUE)
+  if(isTRUE(test[,y]))
+  {
+    x[,y] <- gsub(pattern = "f", replacement =  "Female", x[,y], ignore.case = TRUE)
+  }
+  test[,y] <- grep(pattern = "m", x[,y], ignore.case = TRUE)
+  if(isTRUE(test[,y]))
+  {
+     x[,y] <- gsub(pattern = "m", replacement = "Male", x[,y], ignore.case = TRUE)
+  }
   return(x)
 }
 
@@ -85,7 +88,7 @@ cougar_col_rename <- function(a, b, c, d)
 cleanup_data <- function(x)
 {
   x <- x %>%
-    cougar_status("Status") %>%
+    cougar_status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
     cougar_sex("Sex") %>%
     cougar_melt("Length", "Weight") %>%
     cougar_add_col() %>%
@@ -94,6 +97,3 @@ cleanup_data <- function(x)
   return(x)
 }
 cougar_data <- cleanup_data(cougar_data)
-
-
-
