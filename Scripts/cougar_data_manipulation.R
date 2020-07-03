@@ -21,7 +21,12 @@ cougar_data <- cougar_data[-c(9:11)]
 #give the function 2 more arguments, which are vectors
 #the first vector is the unique data entries (e.g., "A","B","C")
 #the second vector is the appropriate terms (e.g., "whole organism","part organism - field dressed", "part organism - skinned")
-cougar_status <- function(a, b, c, d) 
+cougar_status <- function(a, b, c, d)
+  #make a a term
+  #E.g., a = data and comment that data = dataframe; 
+  #b = column, and that column must be in quotes;
+  #c = old.terms, which is a vector;
+  #d = new.terms, which is a vector
 {
   for(i in 1:length(c)){
     a[,b][a[,b] == c[i]] <- d[i]
@@ -32,6 +37,9 @@ cougar_status <- function(a, b, c, d)
 ## f -> female & m -> male
 #we don't want to assert that a data entry is male if it is N/A
 #modify so that x[,y] must start with "m" or "M" to be "Male"
+
+# pattern = "\b[M,m]" for male; \b[F,f] for female
+
 cougar_sex <- function(x, y)
 {
   test <- x
