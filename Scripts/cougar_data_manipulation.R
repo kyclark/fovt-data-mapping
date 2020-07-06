@@ -12,34 +12,22 @@ library(reshape2)
 ## updated set gets rid of columns w no data
 cougar_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/column%20name%20template.csv")
 cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
-cougar_data <- cougar_data[-c(9:11)]
-test <- cougar_data
+aepyceros_data <- Extant_Aepyceros_database_updated_11_2016
 
 
 ## update status
-cougar_status <- function(a, b, c, d) 
+cougar_status <- function(data, column, check, replace) 
 {
-  for(i in 1:length(c)){
-    a[,b][a[,b] == c[i]] <- d[i]
+  for(i in 1:length(check)){
+    data[,column][data[,column] == check[i]] <- replace[i]
   }
-  return(a)
+  return(data)
 }
 
-## f -> female & m -> male
-#we don't want to assert that a data entry is male if it is N/A
-#modify so that x[,y] must start with "m" or "M" to be "Male"
-cougar_sex <- function(x, y, z)
+cougar_sex <- function(x, y)
 {
-  z[,y] <- grep(pattern = "f", x[,y], ignore.case = TRUE)
-  if(z[,y] == TRUE){
-    x[,y][z[,y] == TRUE] <- "Female"
-    z[,y] <- grep(pattern = "m", x[,y], ignore.case = TRUE)
-  }
-  else if(z[,y] == TRUE){
-    x[,y][z[,y] == TRUE] <- "Male"
-  }
-  # x[,y] <- gsub(pattern = "m", replacement = "Male", x[,y], ignore.case = TRUE)
-  # x[,y] <- gsub(pattern = "f", replacement = "Female", x[,y], ignore.case = TRUE)
+  x[,y] <- gsub(pattern = "\\<f", replacement = "Female", x[,y], ignore.case = TRUE)
+  x[,y] <- gsub(pattern = "\\<m", replacement = "Male", x[,y], ignore.case = TRUE)
   return(x)
 }
 
@@ -80,15 +68,23 @@ cougar_col_rename <- function(a, b, c, d)
 }
 
 #so great! We'll see if this works with other datasets or if we need to break it apart.
-cleanup_data <- function(x)
-{
-  x <- x %>%
-    cougar_status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
-    cougar_sex("Sex", test) %>%
-    cougar_melt("Length", "Weight") %>%
-    cougar_add_col() %>%
-    cougar_measurement_unit("measurementUnit", "variable") %>%
-    cougar_col_rename(cougar_template, "Column.Name", "Template.Name")
-  return(x)
-}
-cougar_data <- cleanup_data(cougar_data)
+# cleanup_data <- function(x)
+# {
+#   x <- x %>%
+#     cougar_status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
+#     cougar_sex("Sex") %>%
+#     cougar_melt("Length", "Weight") %>%
+#     cougar_add_col() %>%
+#     cougar_measurement_unit("measurementUnit", "variable") %>%
+#     cougar_col_rename(cougar_template, "Column.Name", "Template.Name")
+#   return(x)
+# }
+aepyceros_data1 <- aepyceros_data %>%
+      #cougar_status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
+      cougar_sex("SEX") %>%
+      cougar_melt("Length", "Weight") %>%
+      cougar_add_col() %>%
+      cougar_measurement_unit("measurementUnit", "variable") %>%
+      cougar_col_rename(cougar_template, "Column.Name", "Template.Name")
+
+
