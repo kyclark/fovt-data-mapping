@@ -16,7 +16,21 @@ aepyceros_data <- Extant_Aepyceros_database_updated_11_2016
 
 
 ## update status
+<<<<<<< HEAD
 cougar_status <- function(data, column, check, replace) 
+=======
+
+#let's make this more general
+#give the function 2 more arguments, which are vectors
+#the first vector is the unique data entries (e.g., "A","B","C")
+#the second vector is the appropriate terms (e.g., "whole organism","part organism - field dressed", "part organism - skinned")
+cougar_status <- function(a, b, c, d)
+  #make a a term
+  #E.g., a = data and comment that data = dataframe; 
+  #b = column, and that column must be in quotes;
+  #c = old.terms, which is a vector;
+  #d = new.terms, which is a vector
+>>>>>>> 854288fb052cb74c4aa0247060ee0d634d2b1583
 {
   for(i in 1:length(check)){
     data[,column][data[,column] == check[i]] <- replace[i]
@@ -24,6 +38,15 @@ cougar_status <- function(data, column, check, replace)
   return(data)
 }
 
+<<<<<<< HEAD
+=======
+## f -> female & m -> male
+#we don't want to assert that a data entry is male if it is N/A
+#modify so that x[,y] must start with "m" or "M" to be "Male"
+
+# pattern = "\b[M,m]" for male; \b[F,f] for female
+
+>>>>>>> 854288fb052cb74c4aa0247060ee0d634d2b1583
 cougar_sex <- function(x, y)
 {
   x[,y] <- gsub(pattern = "\\<f", replacement = "Female", x[,y], ignore.case = TRUE)
