@@ -13,14 +13,10 @@ library(reshape2)
 cougar_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/column%20name%20template.csv")
 cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
 cougar_data <- cougar_data[-c(9:11)]
+test <- cougar_data
 
 
 ## update status
-
-#let's make this more general
-#give the function 2 more arguments, which are vectors
-#the first vector is the unique data entries (e.g., "A","B","C")
-#the second vector is the appropriate terms (e.g., "whole organism","part organism - field dressed", "part organism - skinned")
 cougar_status <- function(a, b, c, d) 
 {
   for(i in 1:length(c)){
@@ -32,19 +28,18 @@ cougar_status <- function(a, b, c, d)
 ## f -> female & m -> male
 #we don't want to assert that a data entry is male if it is N/A
 #modify so that x[,y] must start with "m" or "M" to be "Male"
-cougar_sex <- function(x, y)
+cougar_sex <- function(x, y, z)
 {
-  test <- x
-  test[,y] <- grep(pattern = "f", x[,y], ignore.case = TRUE)
-  if(isTRUE(test[,y]))
-  {
-    x[,y] <- gsub(pattern = "f", replacement =  "Female", x[,y], ignore.case = TRUE)
+  z[,y] <- grep(pattern = "f", x[,y], ignore.case = TRUE)
+  if(z[,y] == TRUE){
+    x[,y][z[,y] == TRUE] <- "Female"
+    z[,y] <- grep(pattern = "m", x[,y], ignore.case = TRUE)
   }
-  test[,y] <- grep(pattern = "m", x[,y], ignore.case = TRUE)
-  if(isTRUE(test[,y]))
-  {
-     x[,y] <- gsub(pattern = "m", replacement = "Male", x[,y], ignore.case = TRUE)
+  else if(z[,y] == TRUE){
+    x[,y][z[,y] == TRUE] <- "Male"
   }
+  # x[,y] <- gsub(pattern = "m", replacement = "Male", x[,y], ignore.case = TRUE)
+  # x[,y] <- gsub(pattern = "f", replacement = "Female", x[,y], ignore.case = TRUE)
   return(x)
 }
 
@@ -89,7 +84,7 @@ cleanup_data <- function(x)
 {
   x <- x %>%
     cougar_status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
-    cougar_sex("Sex") %>%
+    cougar_sex("Sex", test) %>%
     cougar_melt("Length", "Weight") %>%
     cougar_add_col() %>%
     cougar_measurement_unit("measurementUnit", "variable") %>%
