@@ -1,6 +1,6 @@
 ﻿Column.Name,Template.Name
 Museum,institutionCode
-Specimen #,catalogNumber
+Specimen..,catalogNumber
 Species,scientificName
 SEX,sex
 Location.Code,Location Code
