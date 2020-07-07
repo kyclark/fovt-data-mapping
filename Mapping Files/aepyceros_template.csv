@@ -3,8 +3,8 @@ Museum,institutionCode
 Specimen #,catalogNumber
 Species,scientificName
 SEX,sex
-Location Code,Location Code
-Country/Continent,country
-State/Province,stateProvince
-"Age (juv, prime adult, older adult, old)",lifeStage
+Location.Code,Location Code
+Country.Continent,country
+State.Province,stateProvince
+Age..juv..prime.adult..older.adult..old.,lifeStage
 Notes,Notes
