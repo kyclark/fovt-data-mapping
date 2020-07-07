@@ -79,6 +79,14 @@ cougar_col_rename <- function(a, b, c, d)
 #     cougar_col_rename(cougar_template, "Column.Name", "Template.Name")
 #   return(x)
 # }
+
+aepyceros_data <- read.csv("https://de.cyverse.org/dl/d/28031164-7903-4EC1-BA86-6441741BAB35/Extant_Aepyceros_database_updated_11_2016.csv", header = TRUE, stringsAsFactors = FALSE)
+aepyceros_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/aepyceros_template.csv", header = TRUE, stringsAsFactors = FALSE)
+
+aepyceros_data_mapped <- cougar_col_rename(a = aepyceros_data, b = aepyceros_template, c = "Column.Name", d = "Template.Name")
+#Problem: only doing the first one, not going through them all
+#Issue: because length(cols), want nrows
+
 aepyceros_data1 <- aepyceros_data %>%
   #cougar_status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
   cougar_sex("SEX") %>%
