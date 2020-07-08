@@ -14,7 +14,17 @@ library(janitor)
 cougar_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/column%20name%20template.csv")
 cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
 aepyceros_data <- read.csv("https://de.cyverse.org/dl/d/28031164-7903-4EC1-BA86-6441741BAB35/Extant_Aepyceros_database_updated_11_2016.csv", header = TRUE, stringsAsFactors = FALSE)
-aepyceros_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/aepyceros_template.csv", header = TRUE, stringsAsFactors = FALSE)
+aepyceros_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/trait%20mapping.csv", header = TRUE, stringsAsFactors = FALSE)
+
+
+## delete empty rows and columns
+delete_empty_r_and_c <- function(data){
+  data <-data %>%
+    mutate_all(funs(na_if(., ""))) %>%
+    remove_empty("cols") %>%
+    remove_empty("rows")
+  return(data)
+}
 
 ## update status
 status <- function(data, column, check, replace) 
@@ -26,10 +36,11 @@ status <- function(data, column, check, replace)
   return(data)
 }
 
+
 sex <- function(data, column)
 {
-  data[,column] <- gsub(pattern = "\\<f", replacement = "Female", data[,column], ignore.case = TRUE)
-  data[,column] <- gsub(pattern = "\\<m", replacement = "Male", data[,column], ignore.case = TRUE)
+  data[,column] <- replace(data[,column], grep("^f", data[,column], ignore.case = TRUE), "Female")
+  data[,column] <- replace(data[,column], grep("^m", data[,column], ignore.case = TRUE), "Male")
   return(data)
 }
 
@@ -69,34 +80,20 @@ col_rename<- function(data, template, old, new)
   return(data)
 }
 
-delete_empty_r_and_c <- function(data){
-  data <-data %>%
-    mutate_all(funs(na_if(., ""))) %>%
-    remove_empty("cols") %>%
-    remove_empty("rows")
-  return(data)
-}
-
-
-# cleanup_data <- function(data)
-# {
-# data <- data %>%
+# cougar_data <- cougar_data %>%
+#   delete_empty_r_and_c() %>%
 #   status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
 #   sex("Sex") %>%
 #   melt_data("Length", "Weight") %>%
 #   add_col() %>%
 #   measurement_unit("measurementUnit", "variable") %>%
-#   col_rename(cougar_template, "Column.Name", "Template.Name") %>%
-#   delete_empty_cols()
-# return(data)
-# }
-# 
-# cougar_data <- cleanup_data(cougar_data)
+#   col_rename(cougar_template, "Column.Name", "Template.Name")
+
 aepyceros_data <- aepyceros_data %>%
+  #delete_empty_r_and_c() %>%
   #status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
-  sex("SEX") %>%
+  sex("SEX")
   #melt_data("Length", "Weight") %>%
   #add_col() %>%
   #measurement_unit("measurementUnit", "variable") %>%
-  col_rename(aepyceros_template, "Column.Name", "Template.Name") %>%
-  delete_empty_r_and_c()
+  #col_rename(aepyceros_template, "Column.Name", "Template.Name")
