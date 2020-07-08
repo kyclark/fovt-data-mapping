@@ -1,4 +1,13 @@
 ﻿Column.Name,Template.Name
+Museum,institutionCode
+Specimen..,catalogNumber
+Species,scientificName
+SEX,sex
+Location.Code,Location Code
+Country.Continent,country
+State.Province,stateProvince
+Age..juv..prime.adult..older.adult..old.,lifeStage
+Notes,Notes
 Grst.Breadth.acss.Orbits,{Grst Breadth acss Orbits}
 Grst.Breadth.across.the.premaxillae.Muzzle.Width,{Grst Breadth across the premaxillae/Muzzle Width}
 Occipital.Cranial.Height..base.of.foramen.magnum.to.top.of.the.occipital.region.,{Occipital/Cranial Height (base of foramen magnum to top of the occipital region)}
