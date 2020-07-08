@@ -1,71 +1,71 @@
-﻿Column.Name,Template.Name,,,,,
-Grst.Breadth.acss.Orbits,{Grst Breadth acss Orbits},,,,,
-Grst.Breadth.across.the.premaxillae.Muzzle.Width,{Grst Breadth across the premaxillae/Muzzle Width},,,,,
-Occipital.Cranial.Height..base.of.foramen.magnum.to.top.of.the.occipital.region.,{Occipital/Cranial Height (base of foramen magnum to top of the occipital region)},,,,,
-Skull.width.across.mastoids.immediately.behind.external.auditory.meati,{Skull width across mastoids immediately behind external auditory meati},,,,,
-Length.of.nuchal.crest..from.nodual.to.nodual.on.nuchal.crest.,{Length of nuchal crest (from nodual to nodual on nuchal crest)},,,,,
-Greatest.Breadth.of.occipital.condyles,{Greatest Breadth of occipital condyles},,,,,
-Greatest.Breadth.of.Foramen.Magnum,{Greatest Breadth of Foramen Magnum},,,,,
-Depth.of.Foramen.Magnum,{Depth of Foramen Magnum},,,,,
-Nuchal.crest..1.5.,{Nuchal crest (1-5)},,,,,
-Grst.Breadth.of.the.base.of.paraoccipital.process,{Grst Breadth of the base of paraoccipital process},,,,,
-Length.of.the.paraoccipital.process,{Length of the paraoccipital process},,,,,
-Width.of.Paraoccipital.Process..right.below.auditory.bullae,"{Width of Paraoccipital Process, right below auditory bullae}",,,,,
-Length.of.molar.row....alvelous..Maxilla,{Length of molar row (@ alvelous) Maxilla},,,,,
-Length.of.Premolar.row....alvelous..Maxilla,{Length of Premolar row (@ alvelous) Maxilla},,,,,
-Occlusal.length.M3,{M3 length},,,,,
-Occlusal.width.M3,{M3 width},,,,,
-Occlusal.width.M3_.remeasured.11_2016,{M3 width},,,,,
-Occlusal.length.M2,{M2 length},,,,,
-Occlusal.length.M2_remeasured.11_2016,{M2 length},,,,,
-Occlusal.width.M2,{M2 width},,,,,
-Occlusal.width.M2_remeasured.11_2016,{M2 width},,,,,
-Occlusal.length.M1,{M1 length},,,,,
-Occlusal.width.M1,{M1 width},,,,,
-Occlusal.length.P4,{P4 length},,,,,
-Occlusal.Width.P4,{P4 width},,,,,
-Occlusal.length.P2,{P2 length},,,,,
-Occlusal.Width.P2,{P2 width},,,,,
-Anterior.jaw.length,{Anterior jaw length},,,,,
-Posterior.jaw.length,{Posterior jaw length},,,,,
-max.width.of.the.mandibluar.angle,{max width of the mandibluar angle},,,,,
-Length.of.molar.row....alvelous..Mandible,"{Length of molar row (@ alvelous) Mandible	}",,,,,
-Length.of.Premolar.row....alvelous..Mandible,{Length of Premolar row (@ alvelous) Mandible},,,,,
-Depth.of.Mandible.between.M1.and.M2,{Depth of Mandible between M1 and M2},,,,,
-Depth.of.Mandible.between.M2.and.M3,{Depth of Mandible between M2 and M3},,,,,
-Mandibular.Width.at.M2,"{Mandibular Width at M2	}",,,,,
-Diastema.depth.at.alveolus,{Diastema depth at alveolus},,,,,
-Occlusal.length.M3.1,{m3 length},,,,,
-Occlusal.length.M3_remeasured.11_2016,{m3 length},,,,,
-Occlusal.width.M3.1,{m3 length},,,,,
-Occlusal.width.M3_remeasured.11_2016,{m3 length},,,,,
-Occlusal.length.M2.1,{m3 length},,,,,
-Occlusal.length.M2_remeasured.11_2016.1,{m3 length},,,,,
-Occlusal.width.M2.1,{m3 length},,,,,
-Occlusal.width.M2_remeasured.11_2016.1,{m3 length},,,,,
-Occlusal.length.M1.1,{m3 length},,,,,
-Occlusal.length.M1_remeasured.11_2016,{m3 length},,,,,
-Occlusal.width.M1.1,{m3 length},,,,,
-Occlusal.width.M1_remeasured.11_2016,{m3 length},,,,,
-Occlusal.length.P4.1,{m3 length},,,,,
-Occlusal.width.P4,{m3 length},,,,,
-Occlusal.length.P2.1,{m3 length},,,,,
-0cclusal.width.P2,{{p2 width}},,,,,
-Humerus.Length,{humerus length},,,,,
-Humerus.Width.Shaft..AP,{Humerus Width Shaft AP},,,,,
-Humerus.Width.Shaft.ML,{Humerus Width Shaft ML},,,,,
-Humerus.Width.Distal.1..capitulum.,{Humerus Width Distal 1 (capitulum)},,,,,
-Humerus.Width.Distal.2..epicondyles.,{Humerus Width Distal 2 (epicondyles)},,,,,
-Humerus.Width.Proximal..humeral.head.,{Humerus Width Proximal (humeral head)},,,,,
-Femur.Length,{femur length},,,,,
-Femur.Width.Shaft.AP,{Femur Width Shaft AP},,,,,
-Femur.Width.ML,{Femur Width ML},,,,,
-Femur.Width.Distal.1..region.above.condyles.and.below.patellar.surface.,{Femur Width Distal 1 (region above condyles and below patellar surface)},,,,,
-Femur.Width.Distal.2..condyles.,{Femur Width Distal 2 (condyles)},,,,,
-Femur.Width.Proximal.1..intertrochanteric.crest.,{Femur Width Proximal 1 (intertrochanteric crest)},,,,,
-Femur.Width.Proxial.2..less.trochanter.to.head.,{Femur Width Proxial 2 (less trochanter to head)},,,,,
-Medapodial.Length,{Medapodial Length},,,,,
-Medapodial.Width.AP,"{Medapodial Width AP	}",,,,,
-Medapodial.Width.ML,{Medapodial Width ML},,,,,
-Astragalus.Length,{talus length},,,,,
-Astragalus.Width,{Astragalus Width},,,,,
+﻿Column.Name,Template.Name
+Grst.Breadth.acss.Orbits,{Grst Breadth acss Orbits}
+Grst.Breadth.across.the.premaxillae.Muzzle.Width,{Grst Breadth across the premaxillae/Muzzle Width}
+Occipital.Cranial.Height..base.of.foramen.magnum.to.top.of.the.occipital.region.,{Occipital/Cranial Height (base of foramen magnum to top of the occipital region)}
+Skull.width.across.mastoids.immediately.behind.external.auditory.meati,{Skull width across mastoids immediately behind external auditory meati}
+Length.of.nuchal.crest..from.nodual.to.nodual.on.nuchal.crest.,{Length of nuchal crest (from nodual to nodual on nuchal crest)}
+Greatest.Breadth.of.occipital.condyles,{Greatest Breadth of occipital condyles}
+Greatest.Breadth.of.Foramen.Magnum,{Greatest Breadth of Foramen Magnum}
+Depth.of.Foramen.Magnum,{Depth of Foramen Magnum}
+Nuchal.crest..1.5.,{Nuchal crest (1-5)}
+Grst.Breadth.of.the.base.of.paraoccipital.process,{Grst Breadth of the base of paraoccipital process}
+Length.of.the.paraoccipital.process,{Length of the paraoccipital process}
+Width.of.Paraoccipital.Process..right.below.auditory.bullae,{Width of Paraoccipital Process, right below auditory bullae}
+Length.of.molar.row....alvelous..Maxilla,{Length of molar row (@ alvelous) Maxilla}
+Length.of.Premolar.row....alvelous..Maxilla,{Length of Premolar row (@ alvelous) Maxilla}
+Occlusal.length.M3,{M3 length}
+Occlusal.width.M3,{M3 width}
+Occlusal.width.M3_.remeasured.11_2016,{M3 width}
+Occlusal.length.M2,{M2 length}
+Occlusal.length.M2_remeasured.11_2016,{M2 length}
+Occlusal.width.M2,{M2 width}
+Occlusal.width.M2_remeasured.11_2016,{M2 width}
+Occlusal.length.M1,{M1 length}
+Occlusal.width.M1,{M1 width}
+Occlusal.length.P4,{P4 length}
+Occlusal.Width.P4,{P4 width}
+Occlusal.length.P2,{P2 length}
+Occlusal.Width.P2,{P2 width}
+Anterior.jaw.length,{Anterior jaw length}
+Posterior.jaw.length,{Posterior jaw length}
+max.width.of.the.mandibluar.angle,{max width of the mandibluar angle}
+Length.of.molar.row....alvelous..Mandible,{Length of molar row (@ alvelous) Mandible	}
+Length.of.Premolar.row....alvelous..Mandible,{Length of Premolar row (@ alvelous) Mandible}
+Depth.of.Mandible.between.M1.and.M2,{Depth of Mandible between M1 and M2}
+Depth.of.Mandible.between.M2.and.M3,{Depth of Mandible between M2 and M3}
+Mandibular.Width.at.M2,{Mandibular Width at M2	}
+Diastema.depth.at.alveolus,{Diastema depth at alveolus}
+Occlusal.length.M3.1,{m3 length}
+Occlusal.length.M3_remeasured.11_2016,{m3 length}
+Occlusal.width.M3.1,{m3 length}
+Occlusal.width.M3_remeasured.11_2016,{m3 length}
+Occlusal.length.M2.1,{m3 length}
+Occlusal.length.M2_remeasured.11_2016.1,{m3 length}
+Occlusal.width.M2.1,{m3 length}
+Occlusal.width.M2_remeasured.11_2016.1,{m3 length}
+Occlusal.length.M1.1,{m3 length}
+Occlusal.length.M1_remeasured.11_2016,{m3 length}
+Occlusal.width.M1.1,{m3 length}
+Occlusal.width.M1_remeasured.11_2016,{m3 length}
+Occlusal.length.P4.1,{m3 length}
+Occlusal.width.P4,{m3 length}
+Occlusal.length.P2.1,{m3 length}
+0cclusal.width.P2,{p2 width}
+Humerus.Length,{humerus length}
+Humerus.Width.Shaft..AP,{Humerus Width Shaft AP}
+Humerus.Width.Shaft.ML,{Humerus Width Shaft ML}
+Humerus.Width.Distal.1..capitulum.,{Humerus Width Distal 1 (capitulum)}
+Humerus.Width.Distal.2..epicondyles.,{Humerus Width Distal 2 (epicondyles)}
+Humerus.Width.Proximal..humeral.head.,{Humerus Width Proximal (humeral head)}
+Femur.Length,{femur length}
+Femur.Width.Shaft.AP,{Femur Width Shaft AP}
+Femur.Width.ML,{Femur Width ML}
+Femur.Width.Distal.1..region.above.condyles.and.below.patellar.surface.,{Femur Width Distal 1 (region above condyles and below patellar surface)}
+Femur.Width.Distal.2..condyles.,{Femur Width Distal 2 (condyles)}
+Femur.Width.Proximal.1..intertrochanteric.crest.,{Femur Width Proximal 1 (intertrochanteric crest)}
+Femur.Width.Proxial.2..less.trochanter.to.head.,{Femur Width Proxial 2 (less trochanter to head)}
+Medapodial.Length,{Medapodial Length}
+Medapodial.Width.AP,{Medapodial Width AP}
+Medapodial.Width.ML,{Medapodial Width ML}
+Astragalus.Length,{talus length}
+Astragalus.Width,{Astragalus Width}
