@@ -13,8 +13,8 @@ library(janitor)
 ## updated set gets rid of columns w no data
 cougar_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/column%20name%20template.csv")
 cougar_data <- read.csv("https://de.cyverse.org/dl/d/F2088922-D273-49AE-985F-8D55966627A9/1987to2019_Cougar_Weight_Length_Public_Request.csv")
-aepyceros_data <- read.csv("https://de.cyverse.org/dl/d/28031164-7903-4EC1-BA86-6441741BAB35/Extant_Aepyceros_database_updated_11_2016.csv", header = TRUE, stringsAsFactors = FALSE)
-aepyceros_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/cougar_test/Mapping%20Files/trait%20mapping.csv", header = TRUE, stringsAsFactors = FALSE)
+aepyceros_data <- read.csv("https://de.cyverse.org/dl/d/28031164-7903-4EC1-BA86-6441741BAB35/Extant_Aepyceros_database_updated_11_2016.csv", sep = ",", dec = " ")
+aepyceros_template <- read.csv("https://raw.githubusercontent.com/futres/fovt-data-mapping/master/Mapping%20Files/ontology_codeBook.csv", header = TRUE, stringsAsFactors = TRUE)
 
 
 ## delete empty rows and columns
@@ -39,8 +39,8 @@ status <- function(data, column, check, replace)
 
 sex <- function(data, column)
 {
-  data[,column] <- replace(data[,column], grep("^f", data[,column], ignore.case = TRUE), "Female")
-  data[,column] <- replace(data[,column], grep("^m", data[,column], ignore.case = TRUE), "Male")
+  data[,column] <- replace(data[,column], grep("^f", data[,column], ignore.case = TRUE), "female")
+  data[,column] <- replace(data[,column], grep("^m", data[,column], ignore.case = TRUE), "male")
   return(data)
 }
 
@@ -68,6 +68,7 @@ measurement_unit <- function(data, change, check)
 ## rename columns
 col_rename<- function(data, template, old, new)
 {
+  names(data) <- gsub("\\.", " ", colnames(data))
   cols <- colnames(data)
   x <- c()
   for(i in 1:nrow(template))
@@ -89,11 +90,14 @@ col_rename<- function(data, template, old, new)
 #   measurement_unit("measurementUnit", "variable") %>%
 #   col_rename(cougar_template, "Column.Name", "Template.Name")
 
+aepyceros_template <- delete_empty_r_and_c(aepyceros_template)
+aepyceros_data <- col_rename(aepyceros_data, aepyceros_template, "label", "term")
+
 aepyceros_data <- aepyceros_data %>%
-  #delete_empty_r_and_c() %>%
+  delete_empty_r_and_c() %>%
   #status("Status", c("A", "B", "C"), c("Intact", "Field Dressed", "Skinned")) %>%
   sex("SEX")
   #melt_data("Length", "Weight") %>%
   #add_col() %>%
   #measurement_unit("measurementUnit", "variable") %>%
-  #col_rename(aepyceros_template, "Column.Name", "Template.Name")
+  #col_rename(data = aepyceros_data, template = aepyceros_template, old = "label", new ="term")
